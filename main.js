@@ -8,13 +8,14 @@ let biofiltro = false;
 let bomba = false;
 let vidaAcuaponia = 4;
 let vidaPiscicultura = 3;
+let sebradaCama1 = false;
 
 let infoRonda = {
-  1: [3, "Huracán", 20],
-  2: [4, "Terremoto", 20],
-  3: [3, "Inundación", 40],
-  4: [2, "Plaga", 20],
-  5: [1, "Sequía", 0],
+  1: [3, "un huracán", 20],
+  2: [4, "un terremoto", 20],
+  3: [3, "una inundación", 20],
+  4: [2, "una plaga", 40],
+  5: [1, "una sequía", 0],
 };
 
 const idCama = {
@@ -25,9 +26,9 @@ const idCama = {
 
 function jugar() {
   document.getElementById("campos").innerText = campos;
+  document.getElementById("silo").innerText = silo;
   document.getElementById("btnJugar").hidden = true;
-  btnPaso1 = document.getElementById("btnPaso1");
-  btnPaso1.hidden = false;
+  document.getElementById("btnPaso1").hidden = false;
 }
 
 /**
@@ -38,8 +39,7 @@ function paso1() {
   dinero = monto + dinero;
   document.getElementById("dinero").innerText = "$" + dinero;
   paso += 1;
-  btnPaso1 = document.getElementById("btnPaso1");
-  btnPaso1.hidden = true;
+  document.getElementById("btnPaso1").hidden = true;
   inicioPaso2();
 }
 
@@ -48,17 +48,14 @@ function paso1() {
  */
 function inicioPaso2() {
   if (bomba === false) {
-    btnBomba = document.getElementById("btnPaso2Bomba");
-    btnBomba.hidden = false;
+    document.getElementById("btnPaso2Bomba").hidden = false;
   }
 
   if (biofiltro === false) {
-    btnBiofiltro = document.getElementById("btnPaso2Biofiltro");
-    btnBiofiltro.hidden = false;
+    document.getElementById("btnPaso2Biofiltro").hidden = false;
   }
 
-  btnContinuar = document.getElementById("btnPaso2");
-  btnContinuar.hidden = false;
+  document.getElementById("btnPaso2").hidden = false;
 }
 
 /**
@@ -69,11 +66,10 @@ function comprarBomba() {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     bomba = true;
-    btnBomba = document.getElementById("btnPaso2Bomba");
-    btnBomba.hidden = true;
+    document.getElementById("btnPaso2Bomba").hidden = true;
 
-    icono = document.getElementById("bomba");
-    icono.innerText = "Bomba comprada";
+    document.getElementById("bomba").innerText =
+      "Bomba comprada. Al recircular el agua tu producción aumenta";
   }
 }
 
@@ -85,11 +81,10 @@ function comprarBiofiltro() {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     biofiltro = true;
-    btnBiofiltro = document.getElementById("btnPaso2Biofiltro");
-    btnBiofiltro.hidden = true;
+    document.getElementById("btnPaso2Biofiltro").hidden = true;
 
-    icono = document.getElementById("biofiltro");
-    icono.innerText = "Biofiltro comprado";
+    document.getElementById("biofiltro").innerText =
+      "Biofiltro comprado. Evita el deterioro";
   }
 }
 
@@ -98,12 +93,9 @@ function comprarBiofiltro() {
  */
 function paso2() {
   paso += 1;
-  btnBomba = document.getElementById("btnPaso2Bomba");
-  btnBomba.hidden = true;
-  btnBiofiltro = document.getElementById("btnPaso2Biofiltro");
-  btnBiofiltro.hidden = true;
-  btnContinuar = document.getElementById("btnPaso2");
-  btnContinuar.hidden = true;
+  document.getElementById("btnPaso2Bomba").hidden = true;
+  document.getElementById("btnPaso2Biofiltro").hidden = true;
+  document.getElementById("btnPaso2").hidden = true;
 
   inicioPaso3();
 }
@@ -112,16 +104,11 @@ function paso2() {
  * Mostrar botones para sembrar y para comprar aluvines
  */
 function inicioPaso3() {
-  btnContinuar = document.getElementById("btnPaso3");
-  btnContinuar.hidden = false;
-  btnCama1 = document.getElementById("btnCama1");
-  btnCama1.hidden = false;
-  btnCama2 = document.getElementById("btnCama2");
-  btnCama2.hidden = false;
-  btnCama3 = document.getElementById("btnCama3");
-  btnCama3.hidden = false;
-  btnAluvines = document.getElementById("btnComprarAluvines");
-  btnAluvines.hidden = false;
+  document.getElementById("btnPaso3").hidden = false;
+  document.getElementById("btnCama1").hidden = false;
+  document.getElementById("btnCama2").hidden = false;
+  document.getElementById("btnCama3").hidden = false;
+  document.getElementById("btnComprarAluvines").hidden = false;
 }
 
 /**
@@ -151,12 +138,11 @@ function comprarPeces() {
 }
 
 /**
- * Sembrar aluvines
+ * Fin del paso 3
  */
 function paso3() {
   paso += 1;
-  btnContinuar = document.getElementById("btnPaso3");
-  btnContinuar.hidden = true;
+  document.getElementById("btnPaso3").hidden = true;
 
   inicioPaso4();
 }
@@ -165,12 +151,11 @@ function paso3() {
  * Muestra botón para continuar luego del desastre y ocurre el desastre
  */
 function inicioPaso4() {
-  btnContinuar = document.getElementById("btnPaso4");
-  btnContinuar.hidden = false;
+  document.getElementById("btnPaso4").hidden = false;
   campos -= infoRonda[ronda][2];
   document.getElementById("campos").innerText = campos;
   document.getElementById("desastre").innerText =
-    "Sucedió un " +
+    "Sucedió " +
     infoRonda[ronda][1] +
     ", pierdes " +
     infoRonda[ronda][2] +
@@ -182,46 +167,39 @@ function inicioPaso4() {
  */
 function paso4() {
   paso += 1;
-  btnContinuar = document.getElementById("btnPaso4");
-  btnContinuar.hidden = true;
+  document.getElementById("btnPaso4").hidden = true;
 
   inicioPaso5();
 }
 
 /**
- * Muestra botón para continuar luego del desastre y ocurre el desastre
+ * TODO
  */
-function inicioPaso5() {
-  btnContinuar = document.getElementById("btnPaso5");
-  btnContinuar.hidden = false;
-}
+function inicioPaso5() {}
 
 /**
- * Avanzar luego de que pasa el desastre natural
+ * TODO
  */
-function paso5() {
-  paso += 1;
-  btnContinuar = document.getElementById("btnPaso5");
-  btnContinuar.hidden = true;
-
-  inicioPaso5();
-}
+function paso5() {}
 
 /**
- * Actualiza botones para cosechar y baja la vida si se usaron las camas hidropónicas y los tanques de piscicultura
+ * TODO
  */
-function inicioPaso6() {
-  btnContinuar = document.getElementById("btnPaso5");
-  btnContinuar.hidden = false;
-}
+function inicioPaso6() {}
 
 /**
- * Ocurre desastre natural
+ * TODO
  */
-function paso6() {
-  paso += 1;
-  btnContinuar = document.getElementById("btnPaso5");
-  btnContinuar.hidden = true;
+function paso6() {}
 
-  inicioPaso7();
+/**
+ * TODO
+ */
+function inicioPaso7() {}
+
+/**
+ * TODO
+ */
+function paso7() {
+  document.getElementById("btnJugar").hidden = false;
 }
