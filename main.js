@@ -10,6 +10,10 @@ let vidaAcuaponia = 4;
 let vidaPiscicultura = 3;
 let sebradaCama1 = false;
 
+let cama1 = false;
+let cama2 = false;
+let cama3 = false;
+
 let infoRonda = {
   1: [3, "un huracán", 20],
   2: [4, "un terremoto", 20],
@@ -29,6 +33,7 @@ function jugar() {
   document.getElementById("silo").innerText = silo;
   document.getElementById("btnJugar").hidden = true;
   document.getElementById("btnPaso1").hidden = false;
+  
 }
 
 /**
@@ -111,29 +116,69 @@ function inicioPaso3() {
   document.getElementById("btnComprarAluvines").hidden = false;
 }
 
+
+/**
+ * Establece el valor del boolean de la variable de cada cama
+ * recibe la cama y el booleano que se debe asignarle
+ */
+function setCama(cama, valor){
+  id = idCama[cama]
+  if(id === "btnCama1"){
+    cama1 = valor;
+  }
+  if(id === "btnCama2"){
+    cama2 = valor;
+  }
+  if(id === "btnCama3"){
+    cama3 = valor;
+  }
+}
+
+
 /**
  * Sembrar plántulas
+ * TODO - corregir asignacion de la función al boton
  */
 function sembrar(cama) {
-  if (dinero >= 1) {
+  if (dinero >= 1 && vidaAcuaponia > 0) {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     idBtn = idCama[cama];
     document.getElementById(idBtn).innerText = "La planta está creciendo...";
+    //Activa la cama para avanzar cultivos y cosecharlos
+    setCama(cama, true);
+    document.getElementById(idBtn).onclick = function() {avanzarPlantas()};
     document.getElementById(idBtn).disabled = true;
   }
 }
 
 /**
  * Sembrar aluvines
+ * TODO - corregir asignacion de la función al boton
  */
 function comprarPeces() {
-  if (dinero >= 1) {
+  if (dinero >= 1 && vidaPiscicultura > 0) {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     document.getElementById("btnComprarAluvines").innerText =
       "Los aluvines están creciendo...";
+    document.getElementById("btnComprarAluvines").onclick = function() {avanzarPeces()};
     document.getElementById("btnComprarAluvines").disabled = true;
+  }
+}
+
+/**
+ * Desactiva los botones de las camas que no se compraron
+ */
+function desacivarCamasSinComprar(){
+  if(cama1 === false){
+    document.getElementById("btnCama1").disabled = true;
+  }
+  if(cama2 === false){
+    document.getElementById("btnCama2").disabled = true;
+  }
+  if(cama3 === false){
+    document.getElementById("btnCama3").disabled = true;
   }
 }
 
@@ -143,7 +188,7 @@ function comprarPeces() {
 function paso3() {
   paso += 1;
   document.getElementById("btnPaso3").hidden = true;
-
+  desacivarCamasSinComprar();
   inicioPaso4();
 }
 
@@ -163,7 +208,7 @@ function inicioPaso4() {
 }
 
 /**
- * Ocurre desastre natural
+ * Fin del paso 4
  */
 function paso4() {
   paso += 1;
@@ -173,33 +218,130 @@ function paso4() {
 }
 
 /**
- * TODO
+ * Habilita opciones para avanzar cultivos y peces
+ * 
+ * TODO - Habilitar solo aquellos que fueron sembrados o comprados
  */
-function inicioPaso5() {}
+function inicioPaso5() {
+  document.getElementById("btnPaso5").hidden = false;
+  document.getElementById("btnComprarAluvines").disabled = false;
+  document.getElementById("btnCama1").disabled = false;
+  document.getElementById("btnCama2").disabled = false;
+  document.getElementById("btnCama3").disabled = false;
+
+}
+
+/**
+ * TODO - revisar fncionamiento, peces funcionan, camas no
+ */
+function avanzarPlantas(cama) {
+  if(cama === true){
+    idBtn = idCama[cama];
+    document.getElementById(idBtn).innerText =
+    "¡Planta lista!";
+    document.getElementById(idBtn).disabled = true;
+  }
+}
+
+
+function avanzarPeces() {
+    document.getElementById("btnComprarAluvines").innerText = 
+    "Aluvines en etapa 2 de crecimiento...";
+    document.getElementById("btnComprarAluvines").disabled = true;
+}
+
+
+
+/**
+ * Fin del Paso 5
+ */
+function paso5() {
+  paso += 1;
+  document.getElementById("btnPaso5").hidden = true;
+
+  inicioPaso6();
+}
 
 /**
  * TODO
  */
-function paso5() {}
+function inicioPaso6() {
+  document.getElementById("btnPaso6").hidden = false;
+}
+
 
 /**
- * TODO
+ * Al cosechar una cama se suman sus ganancias al silo
+ * Se estima el deterioro de acuaponia
+ * Se establece la variable de la cama en false
  */
-function inicioPaso6() {}
+function cosechar(cama){
+  id = idCama[cama]
+  
+  comida = 10
+  if(bomba === true){ comida += 5}
+  
+  document.getElementById(id).innerText = "Sembrar plántulas $1";
+  //Establece la vaiable de la cama en false para que se pueda comprar en la siguiente ronda
+  setCama(cama, false);
+  //Reduce la barra de vida
+  if(biofiltro === false){document.getElementById("vidaAcuaponia").ariaValueNow = "75";}
+
+  document.getElementById("silo").innerText = silo + comida;
+}
 
 /**
- * TODO
+ * Al recoger los peces se suman sus ganancias al silo
+ * Se estima el deterioro de piscicola
+ * TODO - Verificar cuantos peces se pueden tener al tiempo
  */
-function paso6() {}
+function recolectar(){
+  comida = 50
+  if(bomba === true){ comida += 20}
+  
+  document.getElementById(id).innerText = "Comprar aluvines $1";
+  //Reduce la barra de vida
+  if(biofiltro === false){document.getElementById("vidaPiscicultura").ariaValueNow = "66";}
+
+  document.getElementById("silo").innerText = silo + comida;
+}
 
 /**
- * TODO
+ * Fin del paso 6
  */
-function inicioPaso7() {}
+function paso6() {
+  paso += 1;
+
+  document.getElementById("btnPaso6").hidden = true;
+  inicioPaso7();
+}
 
 /**
- * TODO
+ * Inicio paso 7, alimentar personas
  */
-function paso7() {
+function inicioPaso7() {
+  document.getElementById("btnPaso7").hidden = false;
+}
+
+/**
+ * TODO - agregar boton para reinicial el juego al haber perdido
+ *        con id: btnPerdiste
+ */
+function alimentar(){
+  if(silo < 100){
+    document.getElementById("btnPerdiste").hidden = false;
+    document.getElementById("btnPerdiste").innerText = "¡¡Oh no!! \n No cuentas con suficiete comida :C";
+    perder = true;
+  }
+  else{
+    silo = silo - 100;
+  }
+
+}
+
+/**
+ * Paso 8: iniciar siguiente ronda
+ */
+function paso8() {
   document.getElementById("btnJugar").hidden = false;
 }
