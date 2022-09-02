@@ -161,7 +161,7 @@ function sembrar(cama) {
  * Sembrar aluvines
  */
 function comprarPeces() {
-  if (dinero >= 1 && vidaPiscicultura > 0 && idPiscicula[0] === false) {
+  if (dinero >= 1 && vidaPiscicultura > 0 && idPiscicula[1] === false) {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     idPiscicula[0] = true;
@@ -224,8 +224,6 @@ function paso4() {
 
 /**
  * Habilita opciones para avanzar cultivos y peces
- * 
- * TODO - Habilitar solo aquellos que fueron sembrados o comprados
  */
 function inicioPaso5() {
   document.getElementById("btnPaso5").hidden = false;
@@ -234,14 +232,17 @@ function inicioPaso5() {
   if(cama1 === true){
     document.getElementById("btnCama1").disabled = false;
     document.getElementById("btnCama1").innerText = "¡Planta lista!";
+    document.getElementById("btnCama1").setAttribute("onClick", "cosechar()");
   }
   if(cama2 === true){
     document.getElementById("btnCama2").disabled = false;
     document.getElementById("btnCama2").innerText = "¡Planta lista!";
+    document.getElementById("btnCama2").setAttribute("onClick", "cosechar()");
   }
   if(cama3 === true){
     document.getElementById("btnCama3").disabled = false;
     document.getElementById("btnCama3").innerText = "¡Planta lista!";
+    document.getElementById("btnCama3").setAttribute("onClick", "cosechar()");
   }
 
   avanzarPlantas(cama1);
@@ -252,25 +253,24 @@ function inicioPaso5() {
 }
 
 /**
- * TODO - AUTOMATICO, CAMBIA A COSECHAR
- */
-function avanzarPlantas(cama) {
-  if(cama === true){
-    idBtn = idCama[cama];
-    document.getElementById(idBtn).innerText =
-    "¡Planta lista!";
-    document.getElementById(idCama).setAttribute("onClick", "cosechar()");
-    document.getElementById(idBtn).disabled = true;
-  }
-}
-
-/**
- * TODO - validar asignacion de fase a peces
+ * TODO - revisar disabled en boton comprar aluvines, ¿si se deshabilitan al avanzar nuevos a etapa dos, como se recogen los que avanzan de etapa dos a tres?
  */
 function avanzarPeces() {
+  if(idPiscicula[2] === true) {
+    document.getElementById("btnComprarAluvines").innerText = 
+    "¡Pescados listos!";
+    idPiscicula[2] = false;
+    idPiscicula[3] = true;
+    document.getElementById("btnComprarAluvines").disabled = true;
+  }
+
+  if(idPiscicula[1] === true) {
     document.getElementById("btnComprarAluvines").innerText = 
     "Aluvines en etapa 2 de crecimiento...";
+    idPiscicula[1] = false;
+    idPiscicula[2] = true;
     document.getElementById("btnComprarAluvines").disabled = true;
+  }
 }
 
 
