@@ -8,7 +8,9 @@ let biofiltro = false;
 let bomba = false;
 let vidaAcuaponia = 4;
 let vidaPiscicultura = 3;
-let sebradaCama1 = false;
+
+
+//let sebradaCama1 = false;
 
 let cama1 = false;
 let cama2 = false;
@@ -28,12 +30,17 @@ const idCama = {
   3: "btnCama3",
 };
 
+const idPiscicula = {
+  1: false,
+  2: false,
+  3: false
+}
+
 function jugar() {
   document.getElementById("campos").innerText = campos;
   document.getElementById("silo").innerText = silo;
   document.getElementById("btnJugar").hidden = true;
   document.getElementById("btnPaso1").hidden = false;
-  
 }
 
 /**
@@ -137,7 +144,6 @@ function setCama(cama, valor){
 
 /**
  * Sembrar plántulas
- * TODO - corregir asignacion de la función al boton
  */
 function sembrar(cama) {
   if (dinero >= 1 && vidaAcuaponia > 0) {
@@ -145,21 +151,20 @@ function sembrar(cama) {
     document.getElementById("dinero").innerText = "$" + dinero;
     idBtn = idCama[cama];
     document.getElementById(idBtn).innerText = "La planta está creciendo...";
-    //Activa la cama para avanzar cultivos y cosecharlos
     setCama(cama, true);
-    document.getElementById(idBtn).onclick = function() {avanzarPlantas()};
+    document.getElementById(idBtn).setAttribute("onClick", "avanzarPlantas()");
     document.getElementById(idBtn).disabled = true;
   }
 }
 
 /**
  * Sembrar aluvines
- * TODO - corregir asignacion de la función al boton
  */
 function comprarPeces() {
-  if (dinero >= 1 && vidaPiscicultura > 0) {
+  if (dinero >= 1 && vidaPiscicultura > 0 && idPiscicula[0] === false) {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
+    idPiscicula[0] = true;
     document.getElementById("btnComprarAluvines").innerText =
       "Los aluvines están creciendo...";
     document.getElementById("btnComprarAluvines").onclick = function() {avanzarPeces()};
@@ -172,13 +177,13 @@ function comprarPeces() {
  */
 function desacivarCamasSinComprar(){
   if(cama1 === false){
-    document.getElementById("btnCama1").disabled = true;
+    document.getElementById("btnCama1").hidden = true;
   }
   if(cama2 === false){
-    document.getElementById("btnCama2").disabled = true;
+    document.getElementById("btnCama2").hidden = true;
   }
   if(cama3 === false){
-    document.getElementById("btnCama3").disabled = true;
+    document.getElementById("btnCama3").hidden = true;
   }
 }
 
@@ -225,25 +230,43 @@ function paso4() {
 function inicioPaso5() {
   document.getElementById("btnPaso5").hidden = false;
   document.getElementById("btnComprarAluvines").disabled = false;
-  document.getElementById("btnCama1").disabled = false;
-  document.getElementById("btnCama2").disabled = false;
-  document.getElementById("btnCama3").disabled = false;
+  
+  if(cama1 === true){
+    document.getElementById("btnCama1").disabled = false;
+    document.getElementById("btnCama1").innerText = "¡Planta lista!";
+  }
+  if(cama2 === true){
+    document.getElementById("btnCama2").disabled = false;
+    document.getElementById("btnCama2").innerText = "¡Planta lista!";
+  }
+  if(cama3 === true){
+    document.getElementById("btnCama3").disabled = false;
+    document.getElementById("btnCama3").innerText = "¡Planta lista!";
+  }
 
+  avanzarPlantas(cama1);
+  avanzarPlantas(cama2);
+  avanzarPlantas(cama3);
+
+  avanzarPeces();
 }
 
 /**
- * TODO - revisar fncionamiento, peces funcionan, camas no
+ * TODO - AUTOMATICO, CAMBIA A COSECHAR
  */
 function avanzarPlantas(cama) {
   if(cama === true){
     idBtn = idCama[cama];
     document.getElementById(idBtn).innerText =
     "¡Planta lista!";
+    document.getElementById(idCama).setAttribute("onClick", "cosechar()");
     document.getElementById(idBtn).disabled = true;
   }
 }
 
-
+/**
+ * TODO - validar asignacion de fase a peces
+ */
 function avanzarPeces() {
     document.getElementById("btnComprarAluvines").innerText = 
     "Aluvines en etapa 2 de crecimiento...";
@@ -305,6 +328,11 @@ function recolectar(){
 
   document.getElementById("silo").innerText = silo + comida;
 }
+
+
+//Mandar alimento a Puntaje, no a Silo
+
+
 
 /**
  * Fin del paso 6
