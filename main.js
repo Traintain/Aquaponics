@@ -1,13 +1,24 @@
+/**
+ * ATRIBUTOS Y CONSTANTES
+ */
+
+let perder = false;
+
 let ronda = 1;
 let paso = 1;
-let silo = 0;
+
 let dinero = 0;
-let campos = 100;
-let comidaAcuaponia = 0;
+
+let produccion = 0;
 let comidaPiscicultura = 0;
-let perder = false;
+let comidaAcuaponia = 0;
+let silo = 0;
+let campos = 100;
+
+
 let biofiltro = false;
 let bomba = false;
+
 let vidaAcuaponia = 4;
 let vidaPiscicultura = 3;
 
@@ -27,9 +38,14 @@ const idCama = {
 
 const idPiscicola = {
   1: ["piscina1", false],
-  2: ["piscina2", false],
+  2: ["piscina2", false], 
   3: ["piscina3", false],
 };
+
+
+/**
+ * COMPORTAMIENTO
+ */
 
 function verElemento(id, visible) {
   if (visible === true) {
@@ -327,7 +343,7 @@ function recolectar() {
   verElemento("btnComprarAluvines", false);
   idPiscicola[3][1] = false;
 
-  document.getElementById("totalHidroponia").innerText = comidaPiscicultura;
+  document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
 
   //Antes de seguir se debe comprobar que se hayan recogido todas las plantas y los aluvines
   if (!hayRecursosPorRecoger()) {
@@ -339,6 +355,7 @@ function recolectar() {
  * Avanza el deterioro en caso de que no haya biofiltro
  */
 function calcularDeterioro() {
+ 
   if (biofiltro === false) {
     vidaAcuaponia !== 0 ? (vidaAcuaponia -= 1) : 1;
     vidaPiscicultura !== 0 ? (vidaPiscicultura -= 1) : 1;
@@ -352,6 +369,7 @@ function calcularDeterioro() {
 /**
  * Fin del Paso 5
  */
+
 function paso5() {
   paso += 1;
   verElemento("btnPaso5", false);
@@ -361,12 +379,48 @@ function paso5() {
 }
 
 /**
- * TODO: En este paso se deben alimentar a las personas. Revisar la suma de campos, comidaAcuaponia y comidaPiscicultura
- * e imprimirla en el puntaje.
+ * Se establece la producción de la ronda y se alimenta a las personas
  */
 function inicioPaso6() {
+  produccion = comidaAcuaponia + comidaPiscicultura + silo + campos;
+  document.getElementById("totalPuntos").innerText = produccion;
+  alimentar();
   verElemento("btnPaso6", true);
 }
+
+/**
+ * TODO - Poner elegante la reducción de cifras de comida a medida que se alimenta
+ * a la poblacion.
+ */
+function alimentar() {
+  let alimentar = 100;
+  while(alimentar > 0){
+    if(produccion > 100){
+      
+      produccion -= 100;
+      document.getElementById("totalPuntos").innerText      = produccion;
+      document.getElementById("totalPiscicola").innerText   = 0;
+      document.getElementById("totalHidroponia").innerText  = 0;
+      document.getElementById("totalSilo").innerText        = 0;
+      document.getElementById("totalCampos").innerText      = 0;
+
+      alimentar = 0;
+    }else{
+      reiniciar();
+    }
+  }
+  paso6();
+}
+
+
+function reiniciar(){ 
+    document.getElementById("btnPerdiste").innerText =
+    "¡¡Oh no!! \n No cuentas con suficiete comida :C";
+    document.getElementById("btnPerdiste").hidden = false;
+    perder = true;
+  }
+
+
 
 /**
  * TODO: Fin del paso 6. El botón btnPaso6 debería cambiar si la persona perdió o ganó.
@@ -384,22 +438,11 @@ function paso6() {
  * poner los contadores de los puntajes en 0 otra vez y los números de la interfaz también.
  */
 function inicioPaso7() {
+  silo += produccion;
+  document.getElementById("silo").innerText = silo;
   verElemento("btnPaso7", true);
 }
 
-/**
- * TODO -
- */
-function alimentar() {
-  if (silo < 100) {
-    document.getElementById("btnPerdiste").hidden = false;
-    document.getElementById("btnPerdiste").innerText =
-      "¡¡Oh no!! \n No cuentas con suficiete comida :C";
-    perder = true;
-  } else {
-    silo = silo - 100;
-  }
-}
 
 /**
  * Paso 7: indica el final del último paso.
