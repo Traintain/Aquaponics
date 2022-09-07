@@ -5,56 +5,79 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/main.css'>
     <script src='main.js'></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.typekit.net/osz0mcx.css">
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <h1 class="display-1">Aquaponics</h1>
+            <div class="col-auto pe-0">
+                <h1 id="main-title-aqua">AQUA</h1>
+            </div>
+            <div class="col-auto ps-0">
+                <h1 id="main-title-ponics">PONICS</h1>
+            </div>
+            
             <button id="btnJugar" class="btn btn-success" onclick=jugar()>Jugar ronda</button>
         </div>
         <div class="row">
-            <div class="col">
+            <div id ="bloque" class="col m-3">
                 <div class="row">
-                    <h2 class="display-3">Acuaponía</h2>
-                    <div class="row">
-                        <button id="btnCama1" class="btn btn-warning" onclick=sembrar(1) hidden>Sembrar plántulas $1</button>
+                    <div class="flex-column d-flex align-items-end">
+                        <h2 class="texto-negrita">HIDROPONÍA</h2>
                     </div>
-                    <div class="row">
-                        <button id="btnCama2" class="btn btn-warning" onclick=sembrar(2) hidden>Sembrar plántulas $1</button>
+                    <div class="progress px-0">
+                        <div id="vidaAcuaponia" class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" ></div>
                     </div>
-                    <div class="row">
-                        <button id="btnCama3" class="btn btn-warning" onclick=sembrar(3) hidden>Sembrar plántulas $1</button>
+                    <div class="row my-2">
+                        <button id="btnCama1" class="btn btn-warning" onclick=sembrar(1) style="visibility: hidden;">Sembrar plántulas $1</button>
                     </div>
-                    <div class="progress">
-                        <div id="vidaAcuaponia" class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" ></div>
-                      </div>
+                    <div class="row my-2"">
+                        <button id="btnCama2" class="btn btn-warning" onclick=sembrar(2) style="visibility: hidden;">Sembrar plántulas $1</button>
+                    </div>
+                    <div class="row my-2"">
+                        <button id="btnCama3" class="btn btn-warning" onclick=sembrar(3) style="visibility: hidden;">Sembrar plántulas $1</button>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
                         <p id="bomba" class="display-5">Bomba</p>
-                        <button id="btnPaso2Bomba" class="btn btn-warning" onclick=comprarBomba() hidden>Comprar bomba $1</button>
+                        <button id="btnPaso2Bomba" class="btn btn-warning" onclick=comprarBomba() style="visibility: hidden;">Comprar bomba $1</button>
                     </div>
                     <div class="col">
                         <p id="biofiltro" class="display-5">Biofiltro</p>
-                        <button id="btnPaso2Biofiltro" class="btn btn-warning" onclick=comprarBiofiltro() hidden>Comprar biofiltro $1</button>
+                        <button id="btnPaso2Biofiltro" class="btn btn-warning" onclick=comprarBiofiltro() style="visibility: hidden;">Comprar biofiltro $1</button>
                     </div>
                 </div>
 
                 <div class="row">
-                    <h2 class="display-3">Piscicultura</h2>
-                    <p id="peces">
-                        <button id="btnComprarAluvines" class="btn btn-primary" onclick=comprarPeces() hidden>Comprar aluvines $1</button>
-                        <div class="progress">
-                            <div id="vidaPiscicultura" class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" ></div>
-                          </div>
-                    </p>
+                    <div class="flex-column d-flex align-items-end">
+                        <h2 class="texto-negrita">PISCÍCOLA</h2>
+                    </div>
+                    <div class="progress px-0">
+                        <div id="vidaPiscicultura" class="progress-bar bg-success" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"  style="width: 100%"></div>
+                    </div>
+                    
+                    <button id="btnComprarAluvines" class="btn btn-primary" onclick=comprarPeces() style="visibility: hidden;">Comprar aluvines $1</button>
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <img src="img/Aluvines.png" class="img-thumbnail pez" id="piscina1">
+                        </div>
+                        <div class="col d-flex justify-content-center">
+                            <img src="img/Aluvines.png" class="img-thumbnail pez" id="piscina2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <img src="img/Pescados.png" class="img-thumbnail pez" id="piscina3">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col">
-                <div class="row">
+                <div class="row m-3" id="bloque">
                     <div class="col">
                         <h2 class="display-3">Silo</h2>
                     </div>
@@ -69,14 +92,74 @@
                     </div>
                 </div>
                     
-                <div class="row">
+                <div class="row m-3" id="bloque">
                         <h2 class="display-3">Campos</h2>
                         <p id="campos" class="display-4"></p>
                         <p id="desastre" class="display-4"></p>
+                        <div class="col d-flex justify-content-center">
+                            <img src="img/CamposYermos.png" class="img-thumbnail">
+                        </div>
+                        <div class="col">
+                            <img src="img/tornado.png" class="img-thumbnail" id="piscina1">
+                        </div>
+                        <div class="col">
+                            <img src="img/tornado.png" class="img-thumbnail" id="piscina1">
+                        </div>
+                        <div class="col">
+                            <img src="img/tornado.png" class="img-thumbnail" id="piscina1">
+                        </div>
+                        <div class="col">
+                            <img src="img/tornado.png" class="img-thumbnail" id="piscina1">
+                        </div>
                 </div>
-                <div class="row">
-                    <h2 class="display-3">Puntaje</h2>
-                    <p id="puntaje"></p>
+                <div class="row m-3" id="bloque">
+                    <div class="col mt-2">
+                        <p id="texto-negrita-puntos">PRODUCCIÓN</p>
+                        <div class="col bloque-puntos p-2 mb-2">
+                            <p id="totalPuntos" class="mb-0">0</p>
+                        </div>
+                    </div>
+                    <div class="col-auto d-flex align-items-center px-0">
+                        <p class="mb-0" class="mb-0">=</p>
+                    </div>
+
+                    <div class="col mt-2">
+                        <p id="texto-negrita-puntos">PISCÍCOLA</p>
+                        <div class="col bloque-puntos p-2 mb-2">
+                            <p id="totalPiscicola" class="mb-0">0</p>
+                        </div>
+                    </div>
+
+                    <div class="col-auto d-flex align-items-center px-0">
+                        <p class="mb-0">+</p>
+                    </div>
+
+                    <div class="col mt-2">
+                        <p id="texto-negrita-puntos">HIDROPONÍA</p>
+                        <div class="col bloque-puntos p-2 mb-2">
+                            <p id="totalHidroponia" class="mb-0">0</p>
+                        </div>
+                    </div>
+
+                    <div class="col-auto d-flex align-items-center px-0">
+                        <p class="mb-0">+</p>
+                    </div>
+                    <div class="col mt-2">
+                        <p id="texto-negrita-puntos">SILO</p>
+                        <div class="col bloque-puntos p-2 mb-2">
+                            <p id="totalSilo" class="mb-0">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-auto d-flex align-items-center px-0">
+                        <p class="mb-0">+</p>
+                    </div>
+                    <div class="col mt-2">
+                        <p id="texto-negrita-puntos">TERRENO</p>
+                        <div class="col bloque-puntos p-2 mb-2">
+                            <p id="totalCampos" class="mb-0">0</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,37 +167,37 @@
             <div class="col">
                 <p class="h3">Cobrar dinero</p>
                 <div id="paso1">
-                    <button id="btnPaso1" class="btn btn-warning" onclick=paso1() hidden>Cobrar dinero</button>
+                    <button id="btnPaso1" class="btn btn-warning" onclick=paso1() style="visibility: hidden;">Cobrar dinero</button>
                 </div>
             </div>
             <div class="col">
                 <p class="h3">Construir filtro y/o bomba</p>
                 <div id="paso-2">
-                    <button id="btnPaso2" class="btn btn-success" onclick=paso2() hidden>Continuar</button>
+                    <button id="btnPaso2" class="btn btn-success" onclick=paso2() style="visibility: hidden;">Continuar</button>
                 </div>
             </div>
             <div class="col">
                 <p class="h3">Sembrar peces y/o plantas</p>
                 <div id="paso-3">
-                    <button id="btnPaso3" class="btn btn-success" onclick=paso3() hidden>Continuar</button>
+                    <button id="btnPaso3" class="btn btn-success" onclick=paso3() style="visibility: hidden;">Continuar</button>
                 </div>
             </div>
             <div class="col">
                 <p class="h3">Desastre natural</p>
                 <div id="paso-4">
-                    <button id="btnPaso4" class="btn btn-success" onclick=paso4() hidden>Continuar</button>
+                    <button id="btnPaso4" class="btn btn-success" onclick=paso4() style="visibility: hidden;">Continuar</button>
                 </div>
             </div>
             <div class="col">
                 <p class="h3">Cosechar y deterioro</p>
                 <div id="paso-5">
-                    <button id="btnPaso5" class="btn btn-success" onclick=paso5() hidden>Continuar</button>
+                    <button id="btnPaso5" class="btn btn-success" onclick=paso5() style="visibility: hidden;">Continuar</button>
                 </div>
             </div>
             <div class="col">
                 <p class="h3">Alimentar personas</p>
                 <div id="paso-6"></div>
-                    <button id="btnPaso6" class="btn btn-success" onclick=paso5() hidden >Continuar</button>
+                    <button id="btnPaso6" class="btn btn-success" onclick=paso5() style="visibility: hidden;" >Continuar</button>
             </div>
             <div class="col">
                 <p class="h3">Almacenar excedentes</p>

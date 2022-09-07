@@ -1,0 +1,47 @@
+#main-title-aqua{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 500%;
+    color: #53DCDA;
+    opacity: 80%;
+}
+
+#main-title-ponics{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 500%;
+    color: #98D650;
+    opacity: 80%;
+}
+
+#texto-negrita{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 200%;
+}
+
+#texto-negrita-puntos{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 64%;
+    margin-bottom: 0 !important;
+    text-align: center;
+}
+
+#bloque{
+    background-color: #47C2C280;    
+    border-radius: 15px;
+}
+
+.bloque-puntos{
+    background-color: #ffffff80;
+    border-radius: 10px;
+}
+
+.pez{
+    visibility:hidden;
+}
