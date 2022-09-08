@@ -56,6 +56,7 @@ function verElemento(id, visible) {
 }
 
 function jugar() {
+
   document.getElementById("campos").innerText = campos;
   document.getElementById("silo").innerText = silo;
   verElemento("btnJugar", false);
@@ -353,6 +354,7 @@ function recolectar() {
 
 /**
  * Avanza el deterioro en caso de que no haya biofiltro
+ * TODO - Revisar deterioro cuando no se compra ningun elemento
  */
 function calcularDeterioro() {
  
@@ -406,6 +408,7 @@ function alimentar() {
 
       alimentar = 0;
     }else{
+      alimentar = 0;
       reiniciar();
     }
   }
@@ -413,11 +416,34 @@ function alimentar() {
 }
 
 
+/**
+ * Al perder, notifica al usuario y le brinda la opcion de volver a jugar
+ * TODO - 
+ * Reiniciar atributos al reiniciar el juego
+ */
 function reiniciar(){ 
-    document.getElementById("btnPerdiste").innerText =
-    "¡¡Oh no!! \n No cuentas con suficiete comida :C";
-    document.getElementById("btnPerdiste").hidden = false;
-    perder = true;
+    Swal.fire({
+    icon: "warning",
+    title: "¡¡Oh no!!!",
+    text: "No cuentas con suficiete comida",
+    confirmButtonText: "Jugar de Nuevo",
+    allowOutsideClick: false
+    }).then((result) => {
+      document.getElementById("totalPuntos").innerText      = 0;
+      document.getElementById("totalPiscicola").innerText   = 0;
+      document.getElementById("totalHidroponia").innerText  = 0;
+      document.getElementById("totalSilo").innerText        = 0;
+      document.getElementById("totalCampos").innerText      = 0;
+      document.getElementById("dinero").innerText           = 0;
+      document.getElementById("silo").innerText             = 0;
+      document.getElementById("campos").innerText           = 0;
+      document.getElementById("desastre").innerText         = "";
+      bomba = false;
+      biofiltro = false;
+      silo = 0;
+      campos = 100;
+      jugar();}
+    )
   }
 
 
