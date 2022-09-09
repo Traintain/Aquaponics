@@ -354,11 +354,10 @@ function recolectar() {
 
 /**
  * Avanza el deterioro en caso de que no haya biofiltro
- * TODO - Revisar deterioro cuando no se compra ningun elemento
  */
 function calcularDeterioro() {
  
-  if (biofiltro === false) {
+  if (biofiltro === false && hayRecursosPorRecoger()) {
     vidaAcuaponia !== 0 ? (vidaAcuaponia -= 1) : 1;
     vidaPiscicultura !== 0 ? (vidaPiscicultura -= 1) : 1;
     document.getElementById("vidaAcuaponia").style =
@@ -391,13 +390,13 @@ function inicioPaso6() {
 }
 
 /**
- * TODO - Poner elegante la reducción de cifras de comida a medida que se alimenta
- * a la poblacion.
+ * Calcula los valores de la produccion de comida y alimenta a la poblacion (-100)
+ *  Si no se cuenta con una produccion suficiente (>= 100) notifica al usuario que ha perdido
  */
 function alimentar() {
   let alimentar = 100;
   while(alimentar > 0){
-    if(produccion > 100){
+    if(produccion >= 100){
       
       produccion -= 100;
       document.getElementById("totalPuntos").innerText      = produccion;
@@ -417,9 +416,7 @@ function alimentar() {
 
 
 /**
- * Al perder, notifica al usuario y le brinda la opcion de volver a jugar
- * TODO - 
- * Reiniciar atributos al reiniciar el juego
+ * Al perder, notifica al usuario y le brinda la opcion de volver a jugar y reestablece los valores del juego
  */
 function reiniciar(){ 
     Swal.fire({
@@ -438,10 +435,18 @@ function reiniciar(){
       document.getElementById("silo").innerText             = 0;
       document.getElementById("campos").innerText           = 0;
       document.getElementById("desastre").innerText         = "";
-      bomba = false;
+      document.getElementById("bomba").innerText            = "Comprar bomba $1";
+      document.getElementById("biofiltro").innerText        = "Comprar biofiltro $1";
+
       biofiltro = false;
+      bomba = false;
+      produccion = 0;
+      comidaAcuaponia = 0;
+      comidaPiscicultura = 0;
       silo = 0;
       campos = 100;
+      dinero = 0;
+      
       jugar();}
     )
   }
@@ -454,18 +459,19 @@ function reiniciar(){
  */
 function paso6() {
   paso += 1;
-
   verElemento("btnPaso6", false);
   inicioPaso7();
 }
 
 /**
+ * Almacena los recursos excedentes en Silo
  * TODO: Inicio paso 7 almacenar excedentes. Si la persona aún no ha perdido, deben ponerse los excedentes en el silo,
  * poner los contadores de los puntajes en 0 otra vez y los números de la interfaz también.
  */
 function inicioPaso7() {
   silo += produccion;
   document.getElementById("silo").innerText = silo;
+  produccion = 0;
   verElemento("btnPaso7", true);
 }
 
