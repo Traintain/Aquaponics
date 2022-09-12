@@ -456,7 +456,7 @@ function paso7() {
   verElemento("btnPaso7", false);
   verElemento("btnJugar", true);
 
-  if (ronda === 5) {
+  if (ronda === 6) {
     Swal.fire({
       icon: "success",
       title: "¡Felicidades!",
