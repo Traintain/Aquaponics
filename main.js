@@ -2,10 +2,7 @@
  * ATRIBUTOS Y CONSTANTES
  */
 
-let perder = false;
-
 let ronda = 1;
-let paso = 1;
 
 let dinero = 0;
 
@@ -14,7 +11,6 @@ let comidaPiscicultura = 0;
 let comidaAcuaponia = 0;
 let silo = 0;
 let campos = 100;
-
 
 let biofiltro = false;
 let bomba = false;
@@ -38,10 +34,9 @@ const idCama = {
 
 const idPiscicola = {
   1: ["piscina1", false],
-  2: ["piscina2", false], 
+  2: ["piscina2", false],
   3: ["piscina3", false],
 };
-
 
 /**
  * COMPORTAMIENTO
@@ -56,7 +51,6 @@ function verElemento(id, visible) {
 }
 
 function jugar() {
-
   document.getElementById("campos").innerText = campos;
   document.getElementById("silo").innerText = silo;
   verElemento("btnJugar", false);
@@ -70,7 +64,6 @@ function paso1() {
   monto = infoRonda[ronda][0];
   dinero = monto + dinero;
   document.getElementById("dinero").innerText = "$" + dinero;
-  paso += 1;
   verElemento("btnPaso1", false);
   inicioPaso2();
 }
@@ -122,7 +115,6 @@ function comprarBiofiltro() {
  * Fin del paso 2
  */
 function paso2() {
-  paso += 1;
   verElemento("btnPaso2Bomba", false);
   verElemento("btnPaso2Biofiltro", false);
   verElemento("btnPaso2", false);
@@ -208,10 +200,12 @@ function desacivarCamasSinComprar() {
  * Fin del paso 3
  */
 function paso3() {
-  paso += 1;
   verElemento("btnPaso3", false);
   desacivarCamasSinComprar();
   verElemento("btnComprarAluvines", false);
+  document.getElementById("btnComprarAluvines").innerText =
+    "Comprar aluvines $1";
+  document.getElementById("btnComprarAluvines").disabled = false;
   inicioPaso4();
 }
 
@@ -234,7 +228,6 @@ function inicioPaso4() {
  * Fin del paso 4
  */
 function paso4() {
-  paso += 1;
   verElemento("btnPaso4", false);
   verElemento("btnComprarAluvines", false);
   inicioPaso5();
@@ -284,6 +277,7 @@ function inicioPaso5() {
 /**
  * Al cosechar una cama se suman sus ganancias a la comida de la ronda
  * Se establece la variable de la cama en false
+ * TODO: Si las camas no tienen vida, NO se puede recoger
  */
 function cosechar(cama) {
   id = idCama[cama][0];
@@ -301,6 +295,7 @@ function cosechar(cama) {
   setCama(cama, false);
 
   document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
+  document.getElementById(id).setAttribute("onClick", "sembrar(" + cama + ")");
   //Antes de seguir se debe comprobar que se hayan recogido todas las plantas y los aluvines
   if (!hayRecursosPorRecoger()) {
     document.getElementById("btnPaso5").disabled = false;
@@ -318,8 +313,10 @@ function avanzarPeces() {
     idPiscicola[3][1] = true;
     verElemento("btnComprarAluvines", true);
     document.getElementById("btnComprarAluvines").disabled = false;
+    document.getElementById("btnComprarAluvines").innerText =
+      "Recoger pescados";
     document
-      .getElementById(idPiscicola[3][0])
+      .getElementById("btnComprarAluvines")
       .setAttribute("onClick", "recolectar()");
   }
 
@@ -333,15 +330,19 @@ function avanzarPeces() {
 /**
  * Al recoger los peces se suman sus ganancias al silo
  * Se estima el deterioro de piscicola
- * TODO - Verificar cuantos peces se pueden tener al tiempo
+ * TODO - Si ya no hay vida los peces NO se pueden recoger
  */
 function recolectar() {
   comidaPiscicultura = 50;
   if (bomba === true) {
     comidaPiscicultura += 20;
   }
-  document.getElementById(id).innerText = "Comprar aluvines $1";
+  document.getElementById("btnComprarAluvines").innerText =
+    "Comprar aluvines $1";
   verElemento("btnComprarAluvines", false);
+  document
+    .getElementById("btnComprarAluvines")
+    .setAttribute("onClick", "comprarPeces()");
   idPiscicola[3][1] = false;
 
   document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
@@ -350,13 +351,13 @@ function recolectar() {
   if (!hayRecursosPorRecoger()) {
     document.getElementById("btnPaso5").disabled = false;
   }
+  mostrarAluvines();
 }
 
 /**
  * Avanza el deterioro en caso de que no haya biofiltro
  */
 function calcularDeterioro() {
- 
   if (biofiltro === false && hayRecursosPorRecoger()) {
     vidaAcuaponia !== 0 ? (vidaAcuaponia -= 1) : 1;
     vidaPiscicultura !== 0 ? (vidaPiscicultura -= 1) : 1;
@@ -372,9 +373,9 @@ function calcularDeterioro() {
  */
 
 function paso5() {
-  paso += 1;
   verElemento("btnPaso5", false);
   document.getElementById("totalCampos").innerText = campos;
+  document.getElementById("totalSilo").innerText = silo;
 
   inicioPaso6();
 }
@@ -385,8 +386,9 @@ function paso5() {
 function inicioPaso6() {
   produccion = comidaAcuaponia + comidaPiscicultura + silo + campos;
   document.getElementById("totalPuntos").innerText = produccion;
-  alimentar();
   verElemento("btnPaso6", true);
+  document.getElementById("btnPaso6").disabled = true;
+  verElemento("alimentarPerder", true);
 }
 
 /**
@@ -394,92 +396,117 @@ function inicioPaso6() {
  *  Si no se cuenta con una produccion suficiente (>= 100) notifica al usuario que ha perdido
  */
 function alimentar() {
-  let alimentar = 100;
-  while(alimentar > 0){
-    if(produccion >= 100){
-      
-      produccion -= 100;
-      document.getElementById("totalPuntos").innerText      = produccion;
-      document.getElementById("totalPiscicola").innerText   = 0;
-      document.getElementById("totalHidroponia").innerText  = 0;
-      document.getElementById("totalSilo").innerText        = 0;
-      document.getElementById("totalCampos").innerText      = 0;
-
-      alimentar = 0;
-    }else{
-      alimentar = 0;
-      reiniciar();
-    }
+  if (produccion >= 100) {
+    // La persona puede avanzar a la siguiente ronda
+    produccion -= 100;
+    comidaAcuaponia = 0;
+    comidaPiscicultura = 0;
+    document.getElementById("totalPuntos").innerText = produccion;
+    document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
+    document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
+    document.getElementById("totalSilo").innerText = 0;
+    document.getElementById("totalCampos").innerText = 0;
+  } else {
+    // La persona perdió
+    reiniciar();
   }
-  paso6();
+  document.getElementById("btnPaso6").disabled = false;
+  document.getElementById("alimentarPerder").disabled = true;
 }
-
 
 /**
  * Al perder, notifica al usuario y le brinda la opcion de volver a jugar y reestablece los valores del juego
  */
-function reiniciar(){ 
-    Swal.fire({
+function reiniciar() {
+  Swal.fire({
     icon: "warning",
     title: "¡¡Oh no!!!",
     text: "No cuentas con suficiete comida",
     confirmButtonText: "Jugar de Nuevo",
-    allowOutsideClick: false
-    }).then((result) => {
-      document.getElementById("totalPuntos").innerText      = 0;
-      document.getElementById("totalPiscicola").innerText   = 0;
-      document.getElementById("totalHidroponia").innerText  = 0;
-      document.getElementById("totalSilo").innerText        = 0;
-      document.getElementById("totalCampos").innerText      = 0;
-      document.getElementById("dinero").innerText           = 0;
-      document.getElementById("silo").innerText             = 0;
-      document.getElementById("campos").innerText           = 0;
-      document.getElementById("desastre").innerText         = "";
-      document.getElementById("bomba").innerText            = "Comprar bomba $1";
-      document.getElementById("biofiltro").innerText        = "Comprar biofiltro $1";
-
-      biofiltro = false;
-      bomba = false;
-      produccion = 0;
-      comidaAcuaponia = 0;
-      comidaPiscicultura = 0;
-      silo = 0;
-      campos = 100;
-      dinero = 0;
-      
-      jugar();}
-    )
-  }
-
-
+    allowOutsideClick: false,
+  }).then((result) => {
+    reiniciarVariables();
+  });
+}
 
 /**
- * TODO: Fin del paso 6. El botón btnPaso6 debería cambiar si la persona perdió o ganó.
- * agregar boton para reinicial el juego al haber perdido con id: btnPerdiste
+ *
  */
 function paso6() {
-  paso += 1;
   verElemento("btnPaso6", false);
+  verElemento("alimentarPerder", false);
+  document.getElementById("alimentarPerder").disabled = false;
   inicioPaso7();
 }
 
 /**
  * Almacena los recursos excedentes en Silo
- * TODO: Inicio paso 7 almacenar excedentes. Si la persona aún no ha perdido, deben ponerse los excedentes en el silo,
- * poner los contadores de los puntajes en 0 otra vez y los números de la interfaz también.
  */
 function inicioPaso7() {
-  silo += produccion;
-  document.getElementById("silo").innerText = silo;
-  produccion = 0;
   verElemento("btnPaso7", true);
 }
 
+function paso7() {
+  silo = produccion;
+  produccion = 0;
+  document.getElementById("silo").innerText = silo;
+  produccion = 0;
+  document.getElementById("totalPuntos").innerText = produccion;
+  ronda += 1;
+  verElemento("btnPaso7", false);
+  verElemento("btnJugar", true);
+
+  if (ronda === 5) {
+    Swal.fire({
+      icon: "success",
+      title: "¡Felicidades!",
+      text: "¡Ganaste!",
+      confirmButtonText: "Jugar de Nuevo",
+      allowOutsideClick: false,
+    }).then((result) => {
+      reiniciarVariables();
+    });
+  }
+}
 
 /**
- * Paso 7: indica el final del último paso.
- * TODO: se debe volver a mostrar el botón para jugar la ronda
+ * Se ponen las variables de nuevo en ceros
  */
-function paso7() {
-  document.getElementById("btnJugar").hidden = false;
+function reiniciarVariables() {
+  document.getElementById("totalPuntos").innerText = 0;
+  document.getElementById("totalPiscicola").innerText = 0;
+  document.getElementById("totalHidroponia").innerText = 0;
+  document.getElementById("totalSilo").innerText = 0;
+  document.getElementById("totalCampos").innerText = 0;
+  document.getElementById("dinero").innerText = 0;
+  document.getElementById("silo").innerText = 0;
+  document.getElementById("campos").innerText = 0;
+  document.getElementById("desastre").innerText = "";
+  document.getElementById("bomba").innerText = "Comprar bomba $1";
+  document.getElementById("biofiltro").innerText = "Comprar biofiltro $1";
+
+  biofiltro = false;
+  bomba = false;
+  produccion = 0;
+  comidaAcuaponia = 0;
+  comidaPiscicultura = 0;
+  silo = 0;
+  campos = 100;
+  dinero = 0;
+  vidaAcuaponia = 4;
+  vidaPiscicultura = 3;
+
+  document.getElementById("vidaAcuaponia").style =
+    "width: " + (vidaAcuaponia / 4) * 100 + "%";
+  document.getElementById("vidaPiscicultura").style =
+    "width: " + (vidaPiscicultura / 3) * 100 + "%";
+
+  verElemento("alimentarPerder", false);
+  document.getElementById("alimentarPerder").disabled = false;
+  verElemento("btnJugar", true);
+
+  for (let i = 1; i <= 3; i++) {
+    idPiscicola[i][1] = false;
+  }
+  mostrarAluvines();
 }
