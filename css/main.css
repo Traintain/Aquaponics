@@ -1,45 +1,31 @@
-#main-title-aqua{
+#btnCama1{
+    position: absolute;
+    top: 19.5%;
+    left: 13.6%;
+    height: 6.2%;
+    width: 13.4%;
     font-family: source-sans-pro,sans-serif;
-    font-weight: 900;
-    font-style: normal;
-    font-size: 500%;
-    color: #53DCDA;
-    opacity: 80%;
+    visibility: hidden;
 }
 
-#main-title-ponics{
+#btnCama2{
+    position: absolute;
+    top: 28%;
+    left: 13.6%;
+    height: 6.2%;
+    width: 13.4%;
     font-family: source-sans-pro,sans-serif;
-    font-weight: 900;
-    font-style: normal;
-    font-size: 500%;
-    color: #98D650;
-    opacity: 80%;
+    visibility: hidden;
 }
 
-#texto-negrita{
+#btnCama3{
+    position: absolute;
+    top: 36.4%;
+    left: 13.6%;
+    height: 6.2%;
+    width: 13.4%;
     font-family: source-sans-pro,sans-serif;
-    font-weight: 900;
-    font-style: normal;
-    font-size: 200%;
-}
-
-#texto-negrita-puntos{
-    font-family: source-sans-pro,sans-serif;
-    font-weight: 900;
-    font-style: normal;
-    font-size: 64%;
-    margin-bottom: 0 !important;
-    text-align: center;
-}
-
-#bloque{
-    background-color: #47C2C280;    
-    border-radius: 15px;
-}
-
-#inicio{
-    background-image: url("../img/Principal.png");
-    height: 100vh;
+    visibility: hidden;
 }
 
 #btnInicio{
@@ -51,21 +37,311 @@
     text-align: center;
 }
 
-#img{
-    background-color: transparent;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
-    height: auto;
+#columnaIzquierda{
+    background-color: black;
 }
 
-.bloque-puntos{
-    background-color: #ffffff80;
-    border-radius: 10px;
+.contador{
+    font-size: 5vh;
+    margin-bottom: 9%;
+    margin-left: 66%;
 }
 
-.pez{
-    visibility:hidden;
-    height: 80%;
-    width: 80%;
+#espacio-tablero{
+    position: relative;
+    height: 100vh;
+}
+
+#img-alevinos-1{
+    position: absolute;
+    top: 60%;
+    left: 14.8%;
+    height: 10%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#img-alevinos-2{
+    position: absolute;
+    top: 60%;
+    left: 26.5%;
+    height: 10%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#img-peces-3{
+    position: absolute;
+    top: 75%;
+    left: 20.5%;
+    height: 10%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#img-bomba{
+    position: absolute;
+    top: 45.1%;
+    left: 2.7%;
+    height: 10.5%;
+    width: 8%;
+    visibility: hidden;
+}
+
+#img-biofiltro{
+    position: absolute;
+    top: 71.5%;
+    left: 3.1%;
+    height: 7%;
+    width: 7%;
+    visibility: hidden;
+}
+
+#img-desastre-1{
+    position: absolute;
+    top: 37.7%;
+    left: 53.3%;
+    height: 40%;
+    width: 8.1%;
+    visibility: hidden;
+}
+
+#img-desastre-2{
+    position: absolute;
+    top: 37.7%;
+    left: 62.2%;
+    height: 40%;
+    width: 8.1%;
+    visibility: hidden;
+}
+
+#img-desastre-3{
+    position: absolute;
+    top: 37.7%;
+    left: 71%;
+    height: 40%;
+    width: 8.1%;
+    visibility: hidden;
+}
+
+#img-desastre-4{
+    position: absolute;
+    top: 37.7%;
+    left: 79.8%;
+    height: 40%;
+    width: 8.1%;
+    visibility: hidden;
+}
+
+#img-desastre-5{
+    position: absolute;
+    top: 37.7%;
+    left: 88.6%;
+    height: 40%;
+    width: 8.1%;
+    visibility: hidden;
+}
+
+#img-planta-1{
+    position: absolute;
+    top: 19.5%;
+    left: 27%;
+    height: 6.2%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-planta-2{
+    position: absolute;
+    top: 27.9%;
+    left: 27%;
+    height: 6.4%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-planta-3{
+    position: absolute;
+    top: 36.4%;
+    left: 27%;
+    height: 6.2%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-plantula-1{
+    position: absolute;
+    top: 19.5%;
+    left: 13.6%;
+    height: 6.2%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-plantula-2{
+    position: absolute;
+    top: 27.9%;
+    left: 13.6%;
+    height: 6.4%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-plantula-3{
+    position: absolute;
+    top: 36.4%;
+    left: 13.6%;
+    height: 6.2%;
+    width: 13.4%;
+    visibility: hidden;
+}
+
+#img-tablero{
+    height: 100%;
+}
+
+#inicio{
+    background-image: url("../img/Principal.png");
+    height: 100vh;
+}
+
+#marco-bomba{
+    top: 43.7%;
+    left: 1.8%;
+    height: 13.5%;
+    width: 10%;
+    border-radius: 50%;
+}
+
+#marco-biofiltro{
+    top: 70.9%;
+    left: 2.4%;
+    height: 8.1%;
+    width: 8.5%;
+}
+
+.marco-clickeable{
+    background-color:#FFFFFF80;
+    position: absolute;
+    border-radius: 10%;
+}
+
+#marco-dinero{
+    top: 12%;
+    left: 75.4%;
+    height: 18%;
+    width: 23.3%;
+    visibility: hidden;
+}
+
+#marco-silo{
+    top: 12%;
+    left: 50%;
+    height: 18%;
+    width: 24.5%;
+    visibility: hidden;
+}
+
+#marco-terreno{
+    top: 31%;
+    left: 50%;
+    height: 48.7%;
+    width: 48.7%;
+    border-radius: 5%;
+    visibility: hidden;
+}
+
+.marco-transparente{    
+    position: absolute;
+    border-radius: 10%;
+}
+
+#produccion-campos{
+    top: 85.5%;
+    left: 90.9%;
+    height: 6.8%;
+    width: 7.2%;
+    visibility: hidden;
+}
+
+#produccion-hidroponia{
+    top: 85.5%;
+    left: 71.9%;
+    height: 6.8%;
+    width: 7.2%;
+    visibility: hidden;
+}
+
+#produccion-piscicola{
+    top: 85.5%;
+    left: 62.5%;
+    height: 6.8%;
+    width: 7.2%;
+    visibility: hidden;
+}
+
+#produccion-silo{
+    top: 85.5%;
+    left: 81.5%;
+    height: 6.8%;
+    width: 7.2%;
+    visibility: hidden;
+}
+
+#produccion-total{
+    top: 85.5%;
+    left: 52.6%;
+    height: 6.8%;
+    width: 7.2%;
+    visibility: hidden;
+}
+
+#tablero{
+    height: 100vh;
+    width: auto;
+}
+
+#vida-hidro-1{
+    position: absolute;
+    top: 13.4%;
+    left: 25.2%;
+    height: 4%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#vida-hidro-2{
+    position: absolute;
+    top: 13.4%;
+    left: 32.2%;
+    height: 4%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#vida-hidro-3{
+    position: absolute;
+    top: 13.4%;
+    left: 39.1%;
+    height: 4%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#vida-tanque-1{
+    position: absolute;
+    top: 90%;
+    left: 30%;
+    height: 4%;
+    width: 9%;
+    visibility: hidden;
+}
+
+#vida-tanque-2{
+    position: absolute;
+    top: 90%;
+    left: 36.9%;
+    height: 4%;
+    width: 9%;
+    visibility: hidden;
 }

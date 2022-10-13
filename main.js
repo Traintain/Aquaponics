@@ -65,23 +65,22 @@ function inicio() {
 }
 
 function inicioPaso1() {
-  document.getElementById("campos").innerText = campos;
   document.getElementById("silo").innerText = silo;
 
   Swal.fire({
     title: "Ronda " + ronda,
     text:
-      "En esta ronda recibirás " +
+      "En esta ronda recibirás $" +
       infoRonda[ronda][0] +
-      "$. Además, " +
+      ". Además, " +
       infoRonda[ronda][1] +
       " se aproxima. Estimamos que luego de que pase los campos solo podrán alimentar a " +
       (campos - infoRonda[ronda][2]) +
       " personas",
-    confirmButtonText: "Cobrar dinero",
+    confirmButtonText: "Continuar",
     allowOutsideClick: false,
   }).then(() => {
-    paso1();
+    verElemento("marco-dinero", true);
   });
 }
 
@@ -92,6 +91,8 @@ function paso1() {
   monto = infoRonda[ronda][0];
   dinero = monto + dinero;
   document.getElementById("dinero").innerText = "$" + dinero;
+  document.getElementById("marco-dinero").className =
+    "marco-transparente d-flex align-items-center";
   inicioPaso2();
 }
 
@@ -118,9 +119,8 @@ function comprarBomba() {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     bomba = true;
-    verElemento("btnPaso2Bomba", false);
-    document.getElementById("bomba").innerText =
-      "Bomba comprada. Al recircular el agua tu producción aumenta";
+    verElemento("marco-bomba", false);
+    verElemento("img-bomba", true);
   }
 }
 
@@ -132,10 +132,8 @@ function comprarBiofiltro() {
     dinero -= 1;
     document.getElementById("dinero").innerText = "$" + dinero;
     biofiltro = true;
-    verElemento("btnPaso2Biofiltro", false);
-
-    document.getElementById("biofiltro").innerText =
-      "Biofiltro comprado. Evita el deterioro";
+    verElemento("marco-biofiltro", false);
+    verElemento("img-biofiltro", true);
   }
 }
 
