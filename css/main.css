@@ -28,6 +28,16 @@
     visibility: hidden;
 }
 
+#btnComprarAlevines{
+    position: absolute;
+    top: 63%;
+    left: 15%;
+    height: 6.2%;
+    width: 8%;
+    font-family: source-sans-pro,sans-serif;
+    visibility: hidden;
+}
+
 #btnInicio{
     font-family: source-sans-pro,sans-serif;
     font-weight: 900;
@@ -41,7 +51,13 @@
     background-color: black;
 }
 
-.contador{
+.contador-inferior{
+    font-size: 5vh;
+    margin-bottom: 9%;
+    margin-left: 22%;
+}
+
+.contador-superior{
     font-size: 5vh;
     margin-bottom: 9%;
     margin-left: 66%;
@@ -211,6 +227,7 @@
     height: 13.5%;
     width: 10%;
     border-radius: 50%;
+    visibility: hidden;
 }
 
 #marco-biofiltro{
@@ -218,6 +235,7 @@
     left: 2.4%;
     height: 8.1%;
     width: 8.5%;
+    visibility: hidden;
 }
 
 .marco-clickeable{
@@ -239,7 +257,6 @@
     left: 50%;
     height: 18%;
     width: 24.5%;
-    visibility: hidden;
 }
 
 #marco-terreno{
@@ -261,7 +278,6 @@
     left: 90.9%;
     height: 6.8%;
     width: 7.2%;
-    visibility: hidden;
 }
 
 #produccion-hidroponia{
@@ -269,7 +285,6 @@
     left: 71.9%;
     height: 6.8%;
     width: 7.2%;
-    visibility: hidden;
 }
 
 #produccion-piscicola{
@@ -277,7 +292,6 @@
     left: 62.5%;
     height: 6.8%;
     width: 7.2%;
-    visibility: hidden;
 }
 
 #produccion-silo{
@@ -285,7 +299,6 @@
     left: 81.5%;
     height: 6.8%;
     width: 7.2%;
-    visibility: hidden;
 }
 
 #produccion-total{
@@ -293,7 +306,6 @@
     left: 52.6%;
     height: 6.8%;
     width: 7.2%;
-    visibility: hidden;
 }
 
 #tablero{
@@ -301,7 +313,7 @@
     width: auto;
 }
 
-#vida-hidro-1{
+#vida-hidro-0{
     position: absolute;
     top: 13.4%;
     left: 25.2%;
@@ -310,7 +322,7 @@
     visibility: hidden;
 }
 
-#vida-hidro-2{
+#vida-hidro-1{
     position: absolute;
     top: 13.4%;
     left: 32.2%;
@@ -319,7 +331,7 @@
     visibility: hidden;
 }
 
-#vida-hidro-3{
+#vida-hidro-2{
     position: absolute;
     top: 13.4%;
     left: 39.1%;
@@ -328,7 +340,7 @@
     visibility: hidden;
 }
 
-#vida-tanque-1{
+#vida-tanque-0{
     position: absolute;
     top: 90%;
     left: 30%;
@@ -337,7 +349,7 @@
     visibility: hidden;
 }
 
-#vida-tanque-2{
+#vida-tanque-1{
     position: absolute;
     top: 90%;
     left: 36.9%;

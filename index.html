@@ -52,7 +52,7 @@
           id="img-tablero"
         />
 
-        <!--Botones para sembrar plantas en cada cama-->
+        <!--Botones para sembrar plantas en cada cama y comprar alevines-->
         <button id="btnCama1" class="btn btn-warning" onclick="sembrar(1)">
           $1
         </button>
@@ -65,29 +65,41 @@
           $1
         </button>
 
+        <button
+          id="btnComprarAlevines"
+          class="btn btn-warning"
+          onclick="comprarAlevines()"
+        >
+          $1
+        </button>
+
         <!--Imágenes de plántulas para cada cama-->
         <img src="./img/Plántula.png" id="img-plantula-1" />
         <img src="./img/Plántula.png" id="img-plantula-2" />
         <img src="./img/Plántula.png" id="img-plantula-3" />
 
         <!--Imágenes de plantas para cada cama-->
-        <img src="./img/Planta.png" id="img-planta-1" />
-        <img src="./img/Planta.png" id="img-planta-2" />
-        <img src="./img/Planta.png" id="img-planta-3" />
+        <img src="./img/Planta.png" id="img-planta-1" onclick="cosechar(1)" />
+        <img src="./img/Planta.png" id="img-planta-2" onclick="cosechar(2)" />
+        <img src="./img/Planta.png" id="img-planta-3" onclick="cosechar(3)" />
 
         <!--Imágenes de aluvines y pescados-->
         <img src="./img/Alevinos.png" id="img-alevinos-1" />
         <img src="./img/Alevinos.png" id="img-alevinos-2" />
-        <img src="./img/Peces.png" id="img-peces-3" />
+        <img
+          src="./img/Peces.png"
+          id="img-peces-3"
+          onclick="recolectarPeces()"
+        />
 
         <!--Imágenes de vida de hidroponía-->
+        <img src="./img/Ciclo de vida.png" id="vida-hidro-0" />
         <img src="./img/Ciclo de vida.png" id="vida-hidro-1" />
         <img src="./img/Ciclo de vida.png" id="vida-hidro-2" />
-        <img src="./img/Ciclo de vida.png" id="vida-hidro-3" />
 
         <!--Imágenes de vida del tanque piscícola-->
+        <img src="./img/Ciclo de vida.png" id="vida-tanque-0" />
         <img src="./img/Ciclo de vida.png" id="vida-tanque-1" />
-        <img src="./img/Ciclo de vida.png" id="vida-tanque-2" />
 
         <!--Imágen bomba y biofiltro-->
         <img src="./img/Energía.png" id="img-bomba" />
@@ -112,18 +124,23 @@
           id="marco-dinero"
           onclick="paso1()"
         >
-          <p class="contador" id="dinero"></p>
+          <p class="contador-superior" id="dinero"></p>
         </div>
 
         <!--Marcos con el contador del silo-->
-        <div class="marco-clickeable d-flex align-items-center" id="marco-silo">
-          <p class="contador" id="silo"></p>
+        <div
+          class="marco-transparente d-flex align-items-center"
+          id="marco-silo"
+          onclick="paso7()"
+        >
+          <p class="contador-superior" id="silo"></p>
         </div>
 
         <!--Marcos para poner las imágenes de cada desastre-->
         <div
           class="marco-clickeable d-flex align-items-center"
           id="marco-terreno"
+          onclick="recogerCultivos()"
         ></div>
         <img src="./img/Desastre - 1.png" id="img-desastre-1" />
         <img src="./img/Desastre - 2.png" id="img-desastre-2" />
@@ -133,38 +150,38 @@
 
         <!--Marcos para poner contadores de la producción de cada ronda-->
         <div
-          class="marco-clickeable d-flex align-items-center"
+          class="marco-transparente d-flex align-items-center"
           id="produccion-total"
         >
-          <p class="contador" id="totalPuntos"></p>
+          <p class="contador-inferior" id="totalPuntos">0</p>
         </div>
 
         <div
-          class="marco-clickeable d-flex align-items-center"
+          class="marco-transparente d-flex align-items-center"
           id="produccion-piscicola"
         >
-          <p class="contador" id="totalPiscicola"></p>
+          <p class="contador-inferior" id="totalPiscicola">0</p>
         </div>
 
         <div
-          class="marco-clickeable d-flex align-items-center"
+          class="marco-transparente d-flex align-items-center"
           id="produccion-hidroponia"
         >
-          <p class="contador" id="totalHidroponia"></p>
+          <p class="contador-inferior" id="totalHidroponia">0</p>
         </div>
 
         <div
-          class="marco-clickeable d-flex align-items-center"
+          class="marco-transparente d-flex align-items-center"
           id="produccion-silo"
         >
-          <p class="contador" id="totalSilo"></p>
+          <p class="contador-inferior" id="totalSilo">0</p>
         </div>
 
         <div
-          class="marco-clickeable d-flex align-items-center"
+          class="marco-transparente d-flex align-items-center"
           id="produccion-campos"
         >
-          <p class="contador" id="totalCampos"></p>
+          <p class="contador-inferior" id="totalCampos">0</p>
         </div>
       </div>
     </div>
