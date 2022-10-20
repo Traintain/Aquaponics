@@ -196,11 +196,9 @@ function sembrar(cama) {
  */
 function mostrarAlevines() {
   for (let i = 1; i <= 3; i++) {
-    if (idPiscicola[i][1] === true) {
-      verElemento(idPiscicola[i][0], true);
-    } else {
-      verElemento(idPiscicola[i][0], false);
-    }
+    idPiscicola[i][1]
+      ? verElemento(idPiscicola[i][0], true)
+      : verElemento(idPiscicola[i][0], false);
   }
 }
 
@@ -306,7 +304,7 @@ function calcularDeterioro() {
       verElemento("vida-hidro-" + vidaAcuaponia, true);
     }
 
-    if (vidaPiscicultura !== 0) {
+    if (vidaPiscicultura > 0) {
       vidaPiscicultura -= 1;
       verElemento("vida-tanque-" + vidaPiscicultura, true);
     }
@@ -318,12 +316,11 @@ function calcularDeterioro() {
  */
 function avanzarRecursos() {
   if (vidaPiscicultura > 0) {
-    if (idPiscicola[2][1] === true) {
+    if (idPiscicola[2][1]) {
       idPiscicola[2][1] = false;
       idPiscicola[3][1] = true;
     }
-
-    if (idPiscicola[1][1] === true) {
+    if (idPiscicola[1][1]) {
       idPiscicola[1][1] = false;
       idPiscicola[2][1] = true;
     }
@@ -341,6 +338,7 @@ function avanzarRecursos() {
 
   if (campos !== 0) {
     verElemento("marco-terreno", true);
+    recogioCampos = false;
   }
   hayRecursosPorRecoger();
 }
@@ -439,7 +437,6 @@ function inicioPaso7() {
   if (produccion === 0) {
     paso7();
   } else {
-    console.log("Inicio paso 7");
     silo = produccion;
     produccion = 0;
     document.getElementById("marco-silo").className =
@@ -455,6 +452,7 @@ function paso7() {
   document.getElementById("totalPuntos").innerText = produccion;
   document.getElementById("marco-silo").className =
     "marco-transparente d-flex align-items-center";
+  document.getElementById("marco-silo").setAttribute("onClick", "");
   document
     .getElementById("btnContinuar")
     .setAttribute("onClick", "inicioPaso1()");
@@ -488,6 +486,7 @@ function reiniciarVariables() {
   document.getElementById("dinero").innerText = 0;
   document.getElementById("silo").innerText = 0;
 
+  ronda = 1;
   biofiltro = false;
   verElemento("img-biofiltro", false);
   bomba = false;
@@ -500,12 +499,13 @@ function reiniciarVariables() {
   dinero = 0;
   vidaAcuaponia = 3;
   vidaPiscicultura = 2;
+  recogioCampos = false;
   for (let i = 0; i < 2; i++) {
     verElemento("vida-hidro-" + i, false);
     verElemento("vida-tanque-" + i, false);
   }
 
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 1; i <= 5; i++) {
     verElemento("img-desastre-" + i, false);
   }
 
