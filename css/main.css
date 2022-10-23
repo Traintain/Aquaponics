@@ -1,3 +1,22 @@
+#btn-biofiltro{
+    position: absolute;
+    top: 70.9%;
+    left: 2.4%;
+    height: 8.1%;
+    width: 8.5%;
+    visibility: hidden;
+}
+
+#btn-bomba{
+    position: absolute;
+    top: 43.7%;
+    left: 1.8%;
+    height: 13.5%;
+    width: 10%;
+    border-radius: 50%;
+    visibility: hidden;
+}
+
 #btnCama1{
     position: absolute;
     top: 19.5%;
@@ -38,7 +57,22 @@
     visibility: hidden;
 }
 
-#btnInicio{
+#btn-continuar{
+    background-color: #eef3c0;
+    font-family: source-sans-pro,sans-serif;
+    border-radius: 15px;
+}
+
+#btn-dinero{
+    top: 12%;
+    left: 75.4%;
+    height: 18%;
+    width: 23.3%;
+    visibility: hidden;
+    border-color: transparent;
+}
+
+#btn-inicio{
     font-family: source-sans-pro,sans-serif;
     font-weight: 900;
     font-style: normal;
@@ -47,8 +81,19 @@
     text-align: center;
 }
 
-#columnaIzquierda{
-    background-color: black;
+#btn-silo{
+    top: 12%;
+    left: 50%;
+    height: 18%;
+    width: 24.5%;
+    visibility: hidden;
+    border-color: transparent;
+}
+
+#columna-izquierda{
+    background-color: #ead32e;
+    height: 100%;
+    width: auto;
 }
 
 .contador-inferior{
@@ -59,8 +104,12 @@
 
 .contador-superior{
     font-size: 5vh;
-    margin-bottom: 9%;
-    margin-left: 66%;
+    position: absolute;
+}
+
+#dinero{
+    top: 16%;
+    left: 91.5%;
 }
 
 #espacio-tablero{
@@ -81,15 +130,6 @@
     position: absolute;
     top: 60%;
     left: 26.5%;
-    height: 10%;
-    width: 9%;
-    visibility: hidden;
-}
-
-#img-peces-3{
-    position: absolute;
-    top: 75%;
-    left: 20.5%;
     height: 10%;
     width: 9%;
     visibility: hidden;
@@ -158,6 +198,20 @@
     visibility: hidden;
 }
 
+#img-peces-3{
+    position: absolute;
+    top: 75%;
+    left: 20.5%;
+    height: 10%;
+    width: 9%;
+    visibility: hidden;
+    background-image: url("../img/Peces.png");
+    background-size: cover;
+    background-color: transparent;
+    border-color: transparent;
+    background-repeat: no-repeat;
+}
+
 #img-planta-1{
     position: absolute;
     top: 19.5%;
@@ -165,6 +219,10 @@
     height: 6.2%;
     width: 13.4%;
     visibility: hidden;
+    background-image: url("../img/Planta.png");
+    background-size: cover;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 #img-planta-2{
@@ -174,6 +232,10 @@
     height: 6.4%;
     width: 13.4%;
     visibility: hidden;
+    background-image: url("../img/Planta.png");
+    background-size: cover;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 #img-planta-3{
@@ -183,6 +245,10 @@
     height: 6.2%;
     width: 13.4%;
     visibility: hidden;
+    background-image: url("../img/Planta.png");
+    background-size: cover;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 #img-plantula-1{
@@ -214,6 +280,7 @@
 
 #img-tablero{
     height: 100%;
+    pointer-events: none;
 }
 
 #inicio{
@@ -221,21 +288,11 @@
     height: 100vh;
 }
 
-#marco-bomba{
-    top: 43.7%;
-    left: 1.8%;
-    height: 13.5%;
-    width: 10%;
-    border-radius: 50%;
-    visibility: hidden;
-}
-
-#marco-biofiltro{
-    top: 70.9%;
-    left: 2.4%;
-    height: 8.1%;
-    width: 8.5%;
-    visibility: hidden;
+#marco-btn-continuar{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .marco-clickeable{
@@ -244,19 +301,36 @@
     border-radius: 10%;
 }
 
-#marco-dinero{
-    top: 12%;
-    left: 75.4%;
-    height: 18%;
-    width: 23.3%;
-    visibility: hidden;
+#marco-descripcion{
+    height: 80%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-#marco-silo{
-    top: 12%;
-    left: 50%;
-    height: 18%;
-    width: 24.5%;
+
+.marco-instrucciones{
+    background-color: #eef3c0;
+    text-align: center;
+    font-family: source-sans-pro,sans-serif;
+    border-radius: 25px;
+}
+
+#marco-paso{
+    margin: 5%;
+    font-size: 100%;
+}
+
+#marco-ronda{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    font-size: 220%;
 }
 
 #marco-terreno{
@@ -271,6 +345,7 @@
 .marco-transparente{    
     position: absolute;
     border-radius: 10%;
+    background-color: transparent;
 }
 
 #produccion-campos{
@@ -292,6 +367,7 @@
     left: 62.5%;
     height: 6.8%;
     width: 7.2%;
+    text-align: center;
 }
 
 #produccion-silo{
@@ -306,11 +382,18 @@
     left: 52.6%;
     height: 6.8%;
     width: 7.2%;
+    background-color: #e0e9ca;
+}
+
+#silo{
+    top: 16%;
+    left: 66.4%;
 }
 
 #tablero{
     height: 100vh;
     width: auto;
+    overflow: hidden;
 }
 
 #vida-hidro-0{
