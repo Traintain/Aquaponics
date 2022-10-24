@@ -89,7 +89,7 @@ function inicioPaso1() {
     infoRonda[ronda][1] +
     " pasará en esta ronda. Luego de que pase, los campos";
   txt +=
-    campos > 0
+    campos > 40
       ? " solo podrán alimentar a " +
         (campos - infoRonda[ronda][2]) +
         " personas</p>"
@@ -98,7 +98,7 @@ function inicioPaso1() {
   document.getElementById("descripcion-paso").innerHTML = txt;
 
   let proximaRonda = "";
-  if (ronda < 6) {
+  if (ronda < 5) {
     proximaRonda =
       "Viene " +
       infoRonda[ronda + 1][1] +
@@ -107,7 +107,7 @@ function inicioPaso1() {
       " campos), +$" +
       infoRonda[ronda + 1][0];
   } else {
-    proximaRonda = "Es la última ronda";
+    proximaRonda = "Esta es la última ronda";
   }
   document.getElementById("proxima-ronda").innerText = proximaRonda;
   verElemento("btn-dinero", true);
@@ -511,6 +511,17 @@ function paso5() {
     document.getElementById("totalSilo").innerText = silo;
     document.getElementById("totalCampos").innerText = 0;
     inicioPaso6();
+    if (ronda === 6) {
+      Swal.fire({
+        icon: "success",
+        title: "¡Felicidades!",
+        text: "¡Ganaste!",
+        confirmButtonText: "Jugar de Nuevo",
+        allowOutsideClick: false,
+      }).then((result) => {
+        reiniciarVariables();
+      });
+    }
   } else {
     // La persona perdió
     Swal.fire({
@@ -559,18 +570,6 @@ function paso7() {
   verElemento("btn-continuar", true);
 
   ronda += 1;
-
-  if (ronda === 6) {
-    Swal.fire({
-      icon: "success",
-      title: "¡Felicidades!",
-      text: "¡Ganaste!",
-      confirmButtonText: "Jugar de Nuevo",
-      allowOutsideClick: false,
-    }).then((result) => {
-      reiniciarVariables();
-    });
-  }
 }
 
 /**
