@@ -96,6 +96,20 @@ function inicioPaso1() {
       : " no producirán alimentos.</p>";
   txt += "<p>Haz click en el dinero para continuar</p>";
   document.getElementById("descripcion-paso").innerHTML = txt;
+
+  let proximaRonda = "";
+  if (ronda < 6) {
+    proximaRonda =
+      "Viene " +
+      infoRonda[ronda + 1][1] +
+      " (-" +
+      infoRonda[ronda + 1][2] +
+      " campos), +$" +
+      infoRonda[ronda + 1][0];
+  } else {
+    proximaRonda = "Es la última ronda";
+  }
+  document.getElementById("proxima-ronda").innerText = proximaRonda;
   verElemento("btn-dinero", true);
   verElemento("btn-continuar", false);
 }
@@ -134,7 +148,7 @@ function inicioPaso2() {
           "<p>Tu tanque de piscicultura está dañado y no lo puedes usar</p>");
   }
 
-  if (biofiltro === false && bomba === false) {
+  if (biofiltro === false || bomba === false) {
     txt += "<p>También puedes comprar mejoras para tu sistema:</p>";
     if (bomba === false) {
       verElemento("btn-bomba", true);
@@ -159,10 +173,16 @@ function inicioPaso2() {
     verElemento("btnCama1", true);
     verElemento("btnCama2", true);
     verElemento("btnCama3", true);
+    verElemento("error-vida-hidroponia", false);
+  } else {
+    verElemento("error-vida-hidroponia", true);
   }
 
   if (vidaPiscicultura > 0) {
     verElemento("btnComprarAlevines", true);
+    verElemento("error-vida-piscicultura", false);
+  } else {
+    verElemento("error-vida-piscicultura", true);
   }
   document.getElementById("descripcion-paso").innerHTML = txt;
 
@@ -270,10 +290,10 @@ function desacivarCamasSinComprar() {
  */
 function inicioPaso3() {
   campos -= infoRonda[ronda][2];
-
-  let txt = "<p>Sucedió " + infoRonda[ronda][1];
+  let txt = "<img src='./img/Terreno - " + ronda + ".png'/>";
+  txt += "<p>Sucedió " + infoRonda[ronda][1];
   campos > 0
-    ? (txt += ", pierdes " + infoRonda[ronda][2] + "campos")
+    ? (txt += ", pierdes " + infoRonda[ronda][2] + " campos")
     : (txt += " los campos no produciran alimento esta ronda.");
 
   txt += "<p>Para avanzar presiona 'Continuar'</p>";
@@ -316,11 +336,11 @@ function hayRecursosPorRecoger() {
   for (let i = 1; i <= 3; i++) {
     if (idCama[i][1] === true) {
       hayRecursosPendientes = true;
-    }
-    if (flag) {
-      txt +=
-        "<p>Para recoger las plantas del sistema hidropónico haz click en la imagen de las plantas</p>";
-      flag = false;
+      if (flag) {
+        txt +=
+          "<p>Para recoger las plantas del sistema hidropónico haz click en la imagen de las plantas</p>";
+        flag = false;
+      }
     }
   }
   if (hayRecursosPendientes) {
@@ -484,10 +504,11 @@ function paso5() {
     produccion -= 100;
     comidaAcuaponia = 0;
     comidaPiscicultura = 0;
+    silo = 0;
     document.getElementById("totalPuntos").innerText = produccion;
     document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
     document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
-    document.getElementById("totalSilo").innerText = 0;
+    document.getElementById("totalSilo").innerText = silo;
     document.getElementById("totalCampos").innerText = 0;
     inicioPaso6();
   } else {
@@ -588,7 +609,8 @@ function reiniciarVariables() {
   }
 
   verElemento("vida-hidro-2", false);
-
+  verElemento("error-vida-hidroponia", false);
+  verElemento("error-vida-piscicultura", false);
   verElemento("btn-continuar", false);
 
   for (let i = 1; i <= 3; i++) {

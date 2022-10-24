@@ -39,6 +39,10 @@
         <div class="row marco-instrucciones" id="marco-descripcion">
           <p id="descripcion-paso"></p>
         </div>
+        <div class="row marco-instrucciones" id="marco-siguiente-ronda">
+          <p>Próxima ronda:</p>
+          <p id="proxima-ronda">.</p>
+        </div>
         <div class="row marco-instrucciones" id="marco-btn-continuar">
           <button id="btn-continuar" class="btn btn-light">Continuar</button>
         </div>
@@ -80,11 +84,17 @@
         <button id="img-planta-1" onclick="cosechar(1)"></button>
         <button id="img-planta-2" onclick="cosechar(2)"></button>
         <button id="img-planta-3" onclick="cosechar(3)"></button>
+        <div id="error-vida-hidroponia" class="mensaje-error">
+          <p id="texto-error-hidroponia">Sistema dañado</p>
+        </div>
 
         <!--Imágenes de aluvines y pescados-->
         <img src="./img/Alevinos.png" id="img-alevinos-1" />
         <img src="./img/Alevinos.png" id="img-alevinos-2" />
         <button id="img-peces-3" onclick="recolectarPeces()"></button>
+        <div id="error-vida-piscicultura" class="mensaje-error">
+          <p id="texto-error-piscicultura">Sistema dañado</p>
+        </div>
 
         <!--Imágenes de vida de hidroponía-->
         <img src="./img/Ciclo de vida.png" id="vida-hidro-0" />
