@@ -583,6 +583,7 @@ function reiniciarVariables() {
   document.getElementById("totalCampos").innerText = 0;
   document.getElementById("dinero").innerText = 0;
   document.getElementById("silo").innerText = 0;
+  verElemento("btn-silo", false);
 
   ronda = 1;
   biofiltro = false;
