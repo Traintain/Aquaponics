@@ -1,0 +1,17 @@
+#container {
+    height: 100vh;
+    display: flex;
+}
+
+#boardcontainer,
+#controlcontainer {
+    background-color: #ead32e;
+}
+
+#boardcontainer {
+    flex: 1;
+}
+
+#controlcontainer {
+    width: 400px;
+}

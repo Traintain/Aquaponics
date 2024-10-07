@@ -1,0 +1,12 @@
+<div id="container">
+  <app-welcome
+    *ngIf="!showBoard"
+    (showBoard)="setShowBoard($event)"
+  ></app-welcome>
+  <div id="controlcontainer">
+    <app-controls-panel *ngIf="showBoard"></app-controls-panel>
+  </div>
+  <div id="boardcontainer">
+    <app-board *ngIf="showBoard"></app-board>
+  </div>
+</div>
