@@ -1,4 +1,8 @@
 <div id="boardcanvascontainers" #boardcanvascontainers>
-  <canvas #boardcanvas></canvas>
-  <canvas #interactivecanvas></canvas>
+  <canvas #boardcanvas id="boardCanvas"></canvas>
+  <canvas
+    #interactivecanvas
+    (click)="onClick($event)"
+    (contextmenu)="onRightClick($event)"
+  ></canvas>
 </div>

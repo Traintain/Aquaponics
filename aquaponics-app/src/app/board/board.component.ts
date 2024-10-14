@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { tokenImage } from './tokenImage.model';
 
 @Component({
   selector: 'app-board',
@@ -7,7 +8,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements AfterViewInit, OnInit {
 
   @ViewChild('boardcanvas', { static: false }) boardCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('interactivecanvas', { static: false }) interactiveCanvas!: ElementRef<HTMLCanvasElement>;
@@ -32,17 +33,44 @@ export class BoardComponent implements AfterViewInit {
   adjustmentRatio = 1;
 
   boardImage = new Image();
-  seedlingImg = new Image();
-  plantImg = new Image();
-  pumpImg = new Image();
-  biofilterImg = new Image();
-  alevinImg = new Image();
-  fishImg = new Image();
-  disaster1Img = new Image();
-  disaster2Img = new Image();
-  disaster3Img = new Image();
-  disaster4Img = new Image();
-  disaster5Img = new Image();
+  // Token images
+  tokenImages: { [key: string]: tokenImage } = {
+    seedling1Img: new tokenImage(0.135, 0.193, 0.67),
+    seedling2Img: new tokenImage(0.135, (0.193 + 0.085), 0.67),
+    seedling3Img: new tokenImage(0.135, (0.193 + 0.085 * 2), 0.67),
+    plant1Img: new tokenImage(0.27, 0.193, 0.67),
+    plant2Img: new tokenImage(0.27, (0.193 + 0.085), 0.67),
+    plant3Img: new tokenImage(0.27, (0.193 + 0.085 * 2), 0.67),
+    pumpImg: new tokenImage(0.029, 0.453, 0.67),
+    biofilterImage: new tokenImage(0.029, 0.715, 0.67),
+    alevin1Img: new tokenImage(0.15, 0.6, 0.55),
+    alevin2Img: new tokenImage(0.264, 0.6, 0.55),
+    fishImg: new tokenImage(0.205, 0.747, 0.55),
+    disaster1Img: new tokenImage(0.531, 0.376, 0.684),
+    disaster2Img: new tokenImage(0.62, 0.376, 0.684),
+    disaster3Img: new tokenImage(0.709, 0.376, 0.684),
+    disaster4Img: new tokenImage(0.797, 0.376, 0.684),
+    disaster5Img: new tokenImage(0.885, 0.376, 0.684),
+  };
+
+  ngOnInit(): void {
+    this.tokenImages['seedling1Img'].image.src = 'images/Plántula.png';
+    this.tokenImages['seedling2Img'].image.src = 'images/Plántula.png';
+    this.tokenImages['seedling3Img'].image.src = 'images/Plántula.png';
+    this.tokenImages['plant1Img'].image.src = 'images/Planta.png';
+    this.tokenImages['plant2Img'].image.src = 'images/Planta.png';
+    this.tokenImages['plant3Img'].image.src = 'images/Planta.png';
+    this.tokenImages['pumpImg'].image.src = 'images/Energía.png';
+    this.tokenImages['biofilterImage'].image.src = 'images/Bacterias.png';
+    this.tokenImages['alevin1Img'].image.src = 'images/Alevines.png';
+    this.tokenImages['alevin2Img'].image.src = 'images/Alevines.png';
+    this.tokenImages['fishImg'].image.src = 'images/Peces.png';
+    this.tokenImages['disaster1Img'].image.src = 'images/Desastre - 1.png';
+    this.tokenImages['disaster2Img'].image.src = 'images/Desastre - 2.png';
+    this.tokenImages['disaster3Img'].image.src = 'images/Desastre - 3.png';
+    this.tokenImages['disaster4Img'].image.src = 'images/Desastre - 4.png';
+    this.tokenImages['disaster5Img'].image.src = 'images/Desastre - 4.png';
+  }
 
   ngAfterViewInit(): void {
     this.boardContext = this.boardCanvas.nativeElement.getContext('2d')!;
@@ -55,6 +83,33 @@ export class BoardComponent implements AfterViewInit {
       this.drawContent();
     });
   }
+
+  onClick(click: MouseEvent) {
+    var clickX = click.offsetX;
+    var clickY = click.offsetY;
+
+    Object.keys(this.tokenImages).forEach(key => {
+      if (this.tokenImages[key].getVisibility() &&
+        this.isInside(
+          clickX,
+          clickY,
+          this.tokenImages[key].x,
+          this.tokenImages[key].y,
+          this.tokenImages[key].width,
+          this.tokenImages[key].height
+        )) {
+        console.log(key);
+        this.ereaseRect(this.tokenImages[key]);
+        return;
+      }
+    })
+  }
+
+  onRightClick(click: Event) {
+    click.preventDefault();
+  }
+
+  // Method to draw the canvas
 
   drawContent() {
     this.updateCanvasResolution();
@@ -119,6 +174,7 @@ export class BoardComponent implements AfterViewInit {
 
       this.boardWidth = imgWidth * this.adjustmentRatio;
       this.boardHeight = imgHeight * this.adjustmentRatio;
+
       this.boardContext.drawImage(this.boardImage, this.dx, this.dy, this.boardWidth, this.boardHeight);
       this.roundedRect(this.boardContext,
         this.dx + (this.boardWidth * 0.527),
@@ -160,180 +216,141 @@ export class BoardComponent implements AfterViewInit {
   }
 
   drawSeedlings(): void {
-    this.seedlingImg.src = 'images/Plántula.png';
-    this.seedlingImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.seedlingImg.width * (this.adjustmentRatio * 0.67);
-      const imgHeight = this.seedlingImg.height * (this.adjustmentRatio * 0.67);
+    this.drawImage(
+      this.tokenImages['seedling1Img'],
+      this.dx + (this.boardWidth * this.tokenImages['seedling1Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['seedling1Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['seedling1Img'].ratio
+    );
 
-      for (let i = 0; i < 3; i++) {
-        this.interactiveContext.drawImage(
-          this.seedlingImg,
-          this.dx + (this.boardWidth * 0.135),
-          this.dy + (this.boardHeight * 0.193 + (i * (this.boardHeight * 0.085))),
-          imgWidth,
-          imgHeight);
-      }
-    }
+    this.drawImage(
+      this.tokenImages['seedling2Img'],
+      this.dx + (this.boardWidth * this.tokenImages['seedling2Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['seedling2Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['seedling2Img'].ratio
+    );
+
+    this.drawImage(
+      this.tokenImages['seedling3Img'],
+      this.dx + (this.boardWidth * this.tokenImages['seedling3Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['seedling3Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['seedling3Img'].ratio
+    );
   }
 
   drawPlants(grownPlants: Array<boolean>): void {
-    this.plantImg.src = 'images/Planta.png';
-    this.plantImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.plantImg.width * (this.adjustmentRatio * 0.67);
-      const imgHeight = this.plantImg.height * (this.adjustmentRatio * 0.67);
-
-      for (let i = 0; i < 3; i++) {
-        if (grownPlants[i]) {
-          this.interactiveContext.drawImage(
-            this.plantImg,
-            this.dx + (this.boardWidth * 0.135 + (this.boardHeight * 0.18)),
-            this.dy + (this.boardHeight * 0.193 + (i * (this.boardHeight * 0.085))),
-            imgWidth,
-            imgHeight);
-        }
-      }
+    if (grownPlants[0]) {
+      this.drawImage(
+        this.tokenImages['plant1Img'],
+        this.dx + (this.boardWidth * this.tokenImages['plant1Img'].percentX),
+        this.dy + (this.boardHeight * this.tokenImages['plant1Img'].percentY),
+        this.adjustmentRatio * this.tokenImages['plant1Img'].ratio
+      );
     }
+    if (grownPlants[1]) {
+      this.drawImage(
+        this.tokenImages['plant2Img'],
+        this.dx + (this.boardWidth * this.tokenImages['plant2Img'].percentX),
+        this.dy + (this.boardHeight * this.tokenImages['plant2Img'].percentY),
+        this.adjustmentRatio * this.tokenImages['plant2Img'].ratio
+      );
+    }
+
+    this.drawImage(
+      this.tokenImages['plant3Img'],
+      this.dx + (this.boardWidth * this.tokenImages['plant3Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['plant3Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['plant3Img'].ratio
+    );
   }
 
   drawPump(): void {
-    this.pumpImg.src = 'images/Energía.png';
-    this.pumpImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.pumpImg.width * (this.adjustmentRatio * 0.67);
-      const imgHeight = this.pumpImg.height * (this.adjustmentRatio * 0.67);
-
-      this.interactiveContext.drawImage(
-        this.pumpImg,
-        this.dx + (this.boardWidth * 0.029),
-        this.dy + (this.boardHeight * 0.453),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['pumpImg'],
+      this.dx + (this.boardWidth * this.tokenImages['pumpImg'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['pumpImg'].percentY),
+      this.adjustmentRatio * this.tokenImages['pumpImg'].ratio
+    );
   }
 
   drawBiofiler(): void {
-    this.biofilterImg.src = 'images/Bacterias.png';
-    this.biofilterImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.biofilterImg.width * (this.adjustmentRatio * 0.67);
-      const imgHeight = this.biofilterImg.height * (this.adjustmentRatio * 0.67);
-
-      this.interactiveContext.drawImage(
-        this.biofilterImg,
-        this.dx + (this.boardWidth * 0.029),
-        this.dy + (this.boardHeight * 0.715),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['biofilterImage'],
+      this.dx + (this.boardWidth * this.tokenImages['biofilterImage'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['biofilterImage'].percentY),
+      this.adjustmentRatio * this.tokenImages['biofilterImage'].ratio
+    );
   }
 
   drawAlevin(alevinStages: Array<boolean>): void {
-    this.alevinImg.src = 'images/Alevines.png';
-    this.alevinImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.alevinImg.width * (this.adjustmentRatio * 0.55);
-      const imgHeight = this.alevinImg.height * (this.adjustmentRatio * 0.55);
+    if (alevinStages[0]) {
+      this.drawImage(
+        this.tokenImages['alevin1Img'],
+        this.dx + (this.boardWidth * this.tokenImages['alevin1Img'].percentX),
+        this.dy + (this.boardHeight * this.tokenImages['alevin1Img'].percentY),
+        this.adjustmentRatio * this.tokenImages['alevin1Img'].ratio
+      );
+    }
 
-      for (let i = 0; i < 2; i++) {
-        if (alevinStages[i]) {
-          this.interactiveContext.drawImage(
-            this.alevinImg,
-            this.dx + (this.boardWidth * 0.15 + (this.boardHeight * 0.153 * i)),
-            this.dy + (this.boardHeight * 0.6),
-            imgWidth,
-            imgHeight);
-        }
-      }
+    if (alevinStages[1]) {
+      this.drawImage(
+        this.tokenImages['alevin2Img'],
+        this.dx + (this.boardWidth * this.tokenImages['alevin2Img'].percentX),
+        this.dy + (this.boardHeight * this.tokenImages['alevin2Img'].percentY),
+        this.adjustmentRatio * this.tokenImages['alevin2Img'].ratio
+      );
     }
   }
 
   drawFish(): void {
-    this.fishImg.src = 'images/Peces.png';
-    this.fishImg.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.fishImg.width * (this.adjustmentRatio * 0.55);
-      const imgHeight = this.fishImg.height * (this.adjustmentRatio * 0.55);
-
-      this.interactiveContext.drawImage(
-        this.fishImg,
-        this.dx + (this.boardWidth * 0.205),
-        this.dy + (this.boardHeight * 0.747),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['fishImg'],
+      this.dx + (this.boardWidth * this.tokenImages['fishImg'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['fishImg'].percentY),
+      this.adjustmentRatio * this.tokenImages['fishImg'].ratio
+    );
   }
 
   drawDisaster1(): void {
-    this.disaster1Img.src = 'images/Desastre - 1.png';
-    this.disaster1Img.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.disaster1Img.width * (this.adjustmentRatio * 0.684);
-      const imgHeight = this.disaster1Img.height * (this.adjustmentRatio * 0.681);
-
-      this.interactiveContext.drawImage(
-        this.disaster1Img,
-        this.dx + (this.boardWidth * 0.531),
-        this.dy + (this.boardHeight * 0.376),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['disaster1Img'],
+      this.dx + (this.boardWidth * this.tokenImages['disaster1Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['disaster1Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['disaster1Img'].ratio
+    );
   }
 
   drawDisaster2(): void {
-    this.disaster2Img.src = 'images/Desastre - 2.png';
-    this.disaster2Img.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.disaster2Img.width * (this.adjustmentRatio * 0.684);
-      const imgHeight = this.disaster2Img.height * (this.adjustmentRatio * 0.681);
-
-      this.interactiveContext.drawImage(
-        this.disaster2Img,
-        this.dx + (this.boardWidth * 0.62),
-        this.dy + (this.boardHeight * 0.376),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['disaster2Img'],
+      this.dx + (this.boardWidth * this.tokenImages['disaster2Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['disaster2Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['disaster2Img'].ratio
+    );
   }
 
   drawDisaster3(): void {
-    this.disaster3Img.src = 'images/Desastre - 3.png';
-    this.disaster3Img.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.disaster3Img.width * (this.adjustmentRatio * 0.684);
-      const imgHeight = this.disaster3Img.height * (this.adjustmentRatio * 0.681);
-
-      this.interactiveContext.drawImage(
-        this.disaster3Img,
-        this.dx + (this.boardWidth * 0.709),
-        this.dy + (this.boardHeight * 0.376),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['disaster3Img'],
+      this.dx + (this.boardWidth * this.tokenImages['disaster3Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['disaster3Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['disaster3Img'].ratio
+    );
   }
 
   drawDisaster4(): void {
-    this.disaster4Img.src = 'images/Desastre - 4.png';
-    this.disaster4Img.onload = () => {
-      // Original image dimensions
-      const imgWidth = this.disaster4Img.width * (this.adjustmentRatio * 0.684);
-      const imgHeight = this.disaster4Img.height * (this.adjustmentRatio * 0.681);
-
-      this.interactiveContext.drawImage(
-        this.disaster4Img,
-        this.dx + (this.boardWidth * 0.797),
-        this.dy + (this.boardHeight * 0.376),
-        imgWidth,
-        imgHeight);
-
-      this.interactiveContext.drawImage(
-        this.disaster4Img,
-        this.dx + (this.boardWidth * 0.885),
-        this.dy + (this.boardHeight * 0.376),
-        imgWidth,
-        imgHeight);
-    }
+    this.drawImage(
+      this.tokenImages['disaster4Img'],
+      this.dx + (this.boardWidth * this.tokenImages['disaster4Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['disaster4Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['disaster4Img'].ratio
+    );
+    this.drawImage(
+      this.tokenImages['disaster5Img'],
+      this.dx + (this.boardWidth * this.tokenImages['disaster5Img'].percentX),
+      this.dy + (this.boardHeight * this.tokenImages['disaster5Img'].percentY),
+      this.adjustmentRatio * this.tokenImages['disaster5Img'].ratio
+    );
   }
 
   // Method taken from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
@@ -363,7 +380,33 @@ export class BoardComponent implements AfterViewInit {
     } else {
       ctx.fillStyle = '#94cf4f';
     }
-
     ctx.fill();
+  }
+
+  drawImage(img: tokenImage, x: number, y: number, ratio: number): void {
+    // Original image dimensions
+    img.width = img.image.width * ratio;
+    img.height = img.image.height * ratio;
+
+    img.x = x;
+    img.y = y;
+
+    this.interactiveContext.drawImage(
+      img.image,
+      x,
+      y,
+      img.width,
+      img.height);
+    img.setVisibility(true);
+  }
+
+  ereaseRect(img: tokenImage): void {
+    // Original image dimensions
+    this.interactiveContext.clearRect(img.x - 1, img.y - 1, img.width + 1, img.height + 1);
+    img.setVisibility(false);
+  }
+
+  isInside(mouseX: number, mouseY: number, upperX: number, upperY: number, width: number, height: number) {
+    return (mouseX >= upperX && mouseX <= (upperX + width) && mouseY >= upperY && mouseY <= (upperY + height));
   }
 }

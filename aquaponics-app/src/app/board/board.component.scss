@@ -3,7 +3,10 @@
     height: 100%;
 }
 
+#boardCanvas {
+    pointer-events: none;
+}
+
 canvas {
     position: fixed;
-    pointer-events: none;
 }
