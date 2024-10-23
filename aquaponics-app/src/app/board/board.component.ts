@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { tokenImage } from './tokenImage.model';
+import { GameSatateService } from '../game-state/game-satate.service';
 
 @Component({
   selector: 'app-board',
@@ -51,9 +52,13 @@ export class BoardComponent implements AfterViewInit, OnInit {
     disaster3Img: new tokenImage(0.709, 0.376, 0.684),
     disaster4Img: new tokenImage(0.797, 0.376, 0.684),
     disaster5Img: new tokenImage(0.885, 0.376, 0.684),
+    moneyBox: new tokenImage(0.753, 0.122, 18),
   };
 
-  ngOnInit(): void {
+  currentStep = 0;
+  currentMoney = 0;
+
+  constructor(private gameStateService: GameSatateService) {
     this.tokenImages['seedling1Img'].image.src = 'images/Plántula.png';
     this.tokenImages['seedling2Img'].image.src = 'images/Plántula.png';
     this.tokenImages['seedling3Img'].image.src = 'images/Plántula.png';
@@ -72,6 +77,16 @@ export class BoardComponent implements AfterViewInit, OnInit {
     this.tokenImages['disaster5Img'].image.src = 'images/Desastre - 4.png';
   }
 
+  ngOnInit(): void {
+    this.gameStateService.currentStep$.subscribe((newStep) => {
+      this.currentStep = newStep;
+    })
+
+    this.gameStateService.currentMoney$.subscribe((newMoney) => {
+      this.currentMoney = newMoney;
+    })
+  }
+
   ngAfterViewInit(): void {
     this.boardContext = this.boardCanvas.nativeElement.getContext('2d')!;
     this.interactiveContext = this.interactiveCanvas.nativeElement.getContext('2d')!;
@@ -87,8 +102,9 @@ export class BoardComponent implements AfterViewInit, OnInit {
   onClick(click: MouseEvent) {
     var clickX = click.offsetX;
     var clickY = click.offsetY;
+    var keyObject = undefined;
 
-    Object.keys(this.tokenImages).forEach(key => {
+    Object.keys(this.tokenImages).some(key => {
       if (this.tokenImages[key].getVisibility() &&
         this.isInside(
           clickX,
@@ -98,9 +114,12 @@ export class BoardComponent implements AfterViewInit, OnInit {
           this.tokenImages[key].width,
           this.tokenImages[key].height
         )) {
-        console.log(key);
-        this.ereaseRect(this.tokenImages[key]);
-        return;
+        keyObject = key;
+
+        this.ereaseRect(this.tokenImages[key].x, this.tokenImages[key].y, this.tokenImages[key].width, this.tokenImages[key].height, this.tokenImages[key]);
+        return true;
+      } else {
+        return false;
       }
     })
   }
@@ -117,6 +136,7 @@ export class BoardComponent implements AfterViewInit, OnInit {
   }
 
   drawInteractiveContent() {
+    this.drawMoney(this.currentStep == 1);
     this.drawLifeCycle(1);
     this.drawSeedlings();
     this.drawPlants([true, false, true]);
@@ -181,7 +201,8 @@ export class BoardComponent implements AfterViewInit, OnInit {
         this.dy + (this.boardHeight * 0.854),
         this.boardWidth * 0.072,
         this.boardHeight * 0.068,
-        this.boardWidth * 0.01);
+        this.boardWidth * 0.01,
+        '#e0e9ca');
 
       this.drawInteractiveContent();
     }
@@ -353,16 +374,42 @@ export class BoardComponent implements AfterViewInit, OnInit {
     );
   }
 
+  drawMoney(clickable: boolean) {
+    this.interactiveContext.font = `${this.boardWidth * 0.04}px source-sans-pro,sans-serif`;
+    this.interactiveContext.fillText(
+      `$ ${this.currentMoney}`,
+      this.dx + (this.boardWidth * 0.91),
+      this.dy + (this.boardHeight * 0.214)
+    )
+
+    this.tokenImages['moneyBox'].setVisibility(clickable);
+    this.tokenImages['moneyBox'].x = this.dx + (this.boardWidth * this.tokenImages['moneyBox'].percentX);
+    this.tokenImages['moneyBox'].y = this.dy + (this.boardHeight * this.tokenImages['moneyBox'].percentY);
+    this.tokenImages['moneyBox'].width = this.boardWidth * 0.235;
+    this.tokenImages['moneyBox'].height = this.boardHeight * 0.18;
+    if (clickable) {
+      this.roundedRect(
+        this.interactiveContext,
+        this.tokenImages['moneyBox'].x,
+        this.tokenImages['moneyBox'].y,
+        this.tokenImages['moneyBox'].width,
+        this.tokenImages['moneyBox'].height,
+        this.adjustmentRatio * this.tokenImages['moneyBox'].ratio,
+        "#ffffff99"
+      )
+    }
+  }
+
   // Method taken from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
   // Any copyright is dedicated to the Public Domain: https://creativecommons.org/publicdomain/zero/1.0/
-  roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+  roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number, fillStyle: string) {
     ctx.beginPath();
     ctx.moveTo(x, y + radius);
     ctx.arcTo(x, y + height, x + radius, y + height, radius);
     ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
     ctx.arcTo(x + width, y, x + width - radius, y, radius);
     ctx.arcTo(x, y, x, y + radius, radius);
-    ctx.fillStyle = '#e0e9ca';
+    ctx.fillStyle = fillStyle;
     ctx.fill();
   }
 
@@ -400,10 +447,12 @@ export class BoardComponent implements AfterViewInit, OnInit {
     img.setVisibility(true);
   }
 
-  ereaseRect(img: tokenImage): void {
+  ereaseRect(x: number, y: number, width: number, height: number, img?: tokenImage): void {
     // Original image dimensions
-    this.interactiveContext.clearRect(img.x - 1, img.y - 1, img.width + 1, img.height + 1);
-    img.setVisibility(false);
+    this.interactiveContext.clearRect(x - 1, y - 1, width + 1, height + 1);
+    if (img != undefined) {
+      img.setVisibility(false);
+    }
   }
 
   isInside(mouseX: number, mouseY: number, upperX: number, upperY: number, width: number, height: number) {
