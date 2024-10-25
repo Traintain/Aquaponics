@@ -9,7 +9,7 @@ import { GameSatateService } from '../game-state/game-satate.service';
   styleUrl: './controls-panel.component.scss'
 })
 export class ControlsPanelComponent implements OnInit {
-  currentRound = 1;
+  currentRound = 0;
 
   constructor(private gameStateService: GameSatateService) { }
 

@@ -36,54 +36,92 @@ export class BoardComponent implements AfterViewInit, OnInit {
   boardImage = new Image();
   // Token images
   tokenImages: { [key: string]: tokenImage } = {
-    seedling1Img: new tokenImage(0.135, 0.193, 0.67),
-    seedling2Img: new tokenImage(0.135, (0.193 + 0.085), 0.67),
-    seedling3Img: new tokenImage(0.135, (0.193 + 0.085 * 2), 0.67),
-    plant1Img: new tokenImage(0.27, 0.193, 0.67),
-    plant2Img: new tokenImage(0.27, (0.193 + 0.085), 0.67),
-    plant3Img: new tokenImage(0.27, (0.193 + 0.085 * 2), 0.67),
-    pumpImg: new tokenImage(0.029, 0.453, 0.67),
-    biofilterImage: new tokenImage(0.029, 0.715, 0.67),
-    alevin1Img: new tokenImage(0.15, 0.6, 0.55),
-    alevin2Img: new tokenImage(0.264, 0.6, 0.55),
-    fishImg: new tokenImage(0.205, 0.747, 0.55),
-    disaster1Img: new tokenImage(0.531, 0.376, 0.684),
-    disaster2Img: new tokenImage(0.62, 0.376, 0.684),
-    disaster3Img: new tokenImage(0.709, 0.376, 0.684),
-    disaster4Img: new tokenImage(0.797, 0.376, 0.684),
-    disaster5Img: new tokenImage(0.885, 0.376, 0.684),
-    moneyBox: new tokenImage(0.753, 0.122, 18),
+    seedling1Img: new tokenImage(0.135, 0.193, 0.67, "#000000ff", 0),
+    seedling2Img: new tokenImage(0.135, (0.193 + 0.085), 0.67, "#000000ff", 0),
+    seedling3Img: new tokenImage(0.135, (0.193 + 0.085 * 2), 0.67, "#000000ff", 0),
+    plant1Img: new tokenImage(0.27, 0.193, 0.67, "#000000ff", 0),
+    plant2Img: new tokenImage(0.27, (0.193 + 0.085), 0.67, "#000000ff", 0),
+    plant3Img: new tokenImage(0.27, (0.193 + 0.085 * 2), 0.67, "#000000ff", 0),
+    pumpImg: new tokenImage(0.029, 0.453, 0.67, "#000000ff", 0),
+    biofilterImage: new tokenImage(0.029, 0.715, 0.67, "#000000ff", 0),
+    alevin1Img: new tokenImage(0.15, 0.6, 0.55, "#000000ff", 0),
+    alevin2Img: new tokenImage(0.264, 0.6, 0.55, "#000000ff", 0),
+    alevin3Img: new tokenImage(0.205, 0.747, 0.55, "#000000ff", 0),
+    disaster1Img: new tokenImage(0.531, 0.376, 0.684, "#000000ff", 0),
+    disaster2Img: new tokenImage(0.62, 0.376, 0.684, "#000000ff", 0),
+    disaster3Img: new tokenImage(0.709, 0.376, 0.684, "#000000ff", 0),
+    disaster4Img: new tokenImage(0.797, 0.376, 0.684, "#000000ff", 0),
+    disaster5Img: new tokenImage(0.885, 0.376, 0.684, "#000000ff", 0),
+    moneyBox: new tokenImage(0.753, 0.122, 0, "#ffffff99", 18),
   };
 
+  // State variables
+  currentRound = 0;
   currentStep = 0;
   currentMoney = 0;
+  currentDamage = 0;
+  isBiofilter = false;
+  isPump = false;
+
+  plantedSeeds = [false, false, false];
+  grownPlants = [false, false, false];
+  fishesInTank = [false, false, false];
 
   constructor(private gameStateService: GameSatateService) {
-    this.tokenImages['seedling1Img'].image.src = 'images/Plántula.png';
-    this.tokenImages['seedling2Img'].image.src = 'images/Plántula.png';
-    this.tokenImages['seedling3Img'].image.src = 'images/Plántula.png';
-    this.tokenImages['plant1Img'].image.src = 'images/Planta.png';
-    this.tokenImages['plant2Img'].image.src = 'images/Planta.png';
-    this.tokenImages['plant3Img'].image.src = 'images/Planta.png';
+    for (let i = 1; i <= 3; i++) {
+      this.tokenImages[`seedling${i}Img`].image.src = 'images/Plántula.png';
+      this.tokenImages[`seedling${i}Img`].onClick = () => {
+        this.tokenImages[`seedling${i}Img`].setClickability(false);
+        this.plantedSeeds[i - 1] = true;
+        this.ereaseRect(this.tokenImages[`seedling${i}Img`].x, this.tokenImages[`seedling${i}Img`].y, this.tokenImages[`seedling${i}Img`].width, this.tokenImages[`seedling${i}Img`].height, this.tokenImages[`seedling${i}Img`]);
+        this.drawSeedlings();
+      }
+      this.tokenImages[`plant${i}Img`].image.src = 'images/Planta.png';
+    }
+
     this.tokenImages['pumpImg'].image.src = 'images/Energía.png';
     this.tokenImages['biofilterImage'].image.src = 'images/Bacterias.png';
     this.tokenImages['alevin1Img'].image.src = 'images/Alevines.png';
     this.tokenImages['alevin2Img'].image.src = 'images/Alevines.png';
-    this.tokenImages['fishImg'].image.src = 'images/Peces.png';
+    this.tokenImages['alevin3Img'].image.src = 'images/Peces.png';
     this.tokenImages['disaster1Img'].image.src = 'images/Desastre - 1.png';
     this.tokenImages['disaster2Img'].image.src = 'images/Desastre - 2.png';
     this.tokenImages['disaster3Img'].image.src = 'images/Desastre - 3.png';
     this.tokenImages['disaster4Img'].image.src = 'images/Desastre - 4.png';
     this.tokenImages['disaster5Img'].image.src = 'images/Desastre - 4.png';
+
+    this.tokenImages['moneyBox'].onClick = () => {
+      this.gameStateService.updateMoney(this.currentMoney + this.gameStateService.roundParams[this.currentRound].money);
+      this.gameStateService.updateStep(2);
+      this.ereaseRect(this.tokenImages['moneyBox'].x, this.tokenImages['moneyBox'].y, this.tokenImages['moneyBox'].width, this.tokenImages['moneyBox'].height, this.tokenImages['moneyBox']);
+      this.drawMoney();
+      this.drawSeedlings();
+    }
   }
 
   ngOnInit(): void {
+    this.gameStateService.currentRound$.subscribe((newRound) => {
+      this.currentRound = newRound;
+    })
+
     this.gameStateService.currentStep$.subscribe((newStep) => {
       this.currentStep = newStep;
     })
 
     this.gameStateService.currentMoney$.subscribe((newMoney) => {
       this.currentMoney = newMoney;
+    })
+
+    this.gameStateService.currentDamage$.subscribe((newDamage) => {
+      this.currentDamage = newDamage;
+    })
+
+    this.gameStateService.isBiofilter$.subscribe((newBiofilter) => {
+      this.isBiofilter = newBiofilter;
+    })
+
+    this.gameStateService.isPump$.subscribe((newPump) => {
+      this.isPump = newPump;
     })
   }
 
@@ -102,10 +140,9 @@ export class BoardComponent implements AfterViewInit, OnInit {
   onClick(click: MouseEvent) {
     var clickX = click.offsetX;
     var clickY = click.offsetY;
-    var keyObject = undefined;
 
     Object.keys(this.tokenImages).some(key => {
-      if (this.tokenImages[key].getVisibility() &&
+      if (this.tokenImages[key].getClickability() &&
         this.isInside(
           clickX,
           clickY,
@@ -114,9 +151,7 @@ export class BoardComponent implements AfterViewInit, OnInit {
           this.tokenImages[key].width,
           this.tokenImages[key].height
         )) {
-        keyObject = key;
-
-        this.ereaseRect(this.tokenImages[key].x, this.tokenImages[key].y, this.tokenImages[key].width, this.tokenImages[key].height, this.tokenImages[key]);
+        this.tokenImages[key].onClick();
         return true;
       } else {
         return false;
@@ -136,14 +171,13 @@ export class BoardComponent implements AfterViewInit, OnInit {
   }
 
   drawInteractiveContent() {
-    this.drawMoney(this.currentStep == 1);
-    this.drawLifeCycle(1);
+    this.drawMoney();
+    this.drawLifeCycle(this.currentDamage);
     this.drawSeedlings();
-    this.drawPlants([true, false, true]);
+    this.drawPlants();
     this.drawPump();
     this.drawBiofiler();
-    this.drawAlevin([true, true]);
-    this.drawFish();
+    this.drawFishTank();
     this.drawDisaster1();
     this.drawDisaster2();
     this.drawDisaster3();
@@ -237,165 +271,110 @@ export class BoardComponent implements AfterViewInit, OnInit {
   }
 
   drawSeedlings(): void {
-    this.drawImage(
-      this.tokenImages['seedling1Img'],
-      this.dx + (this.boardWidth * this.tokenImages['seedling1Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['seedling1Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['seedling1Img'].ratio
-    );
-
-    this.drawImage(
-      this.tokenImages['seedling2Img'],
-      this.dx + (this.boardWidth * this.tokenImages['seedling2Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['seedling2Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['seedling2Img'].ratio
-    );
-
-    this.drawImage(
-      this.tokenImages['seedling3Img'],
-      this.dx + (this.boardWidth * this.tokenImages['seedling3Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['seedling3Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['seedling3Img'].ratio
-    );
+    for (let i = 1; i <= 3; i++) {
+      if (this.plantedSeeds[i - 1]) {
+        this.drawImage(
+          this.tokenImages[`seedling${i}Img`]
+        );
+      } else if (this.currentStep == 2) {
+        this.setTokenImageSize(this.tokenImages[`seedling${i}Img`]);
+        this.tokenImages[`seedling${i}Img`].setClickability(true);
+        this.roundedRect(
+          this.interactiveContext,
+          this.tokenImages[`seedling${i}Img`].x,
+          this.tokenImages[`seedling${i}Img`].y,
+          this.tokenImages[`seedling${i}Img`].width,
+          this.tokenImages[`seedling${i}Img`].height,
+          this.adjustmentRatio * this.tokenImages[`seedling${i}Img`].radius,
+          this.tokenImages[`seedling${i}Img`].fillColor
+        )
+      }
+    }
   }
 
-  drawPlants(grownPlants: Array<boolean>): void {
-    if (grownPlants[0]) {
-      this.drawImage(
-        this.tokenImages['plant1Img'],
-        this.dx + (this.boardWidth * this.tokenImages['plant1Img'].percentX),
-        this.dy + (this.boardHeight * this.tokenImages['plant1Img'].percentY),
-        this.adjustmentRatio * this.tokenImages['plant1Img'].ratio
-      );
+  drawPlants(): void {
+    for (let i = 1; i <= 3; i++) {
+      if (this.grownPlants[i - 1]) {
+        this.drawImage(
+          this.tokenImages[`plant${i}Img`]
+        );
+      }
     }
-    if (grownPlants[1]) {
-      this.drawImage(
-        this.tokenImages['plant2Img'],
-        this.dx + (this.boardWidth * this.tokenImages['plant2Img'].percentX),
-        this.dy + (this.boardHeight * this.tokenImages['plant2Img'].percentY),
-        this.adjustmentRatio * this.tokenImages['plant2Img'].ratio
-      );
-    }
-
-    this.drawImage(
-      this.tokenImages['plant3Img'],
-      this.dx + (this.boardWidth * this.tokenImages['plant3Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['plant3Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['plant3Img'].ratio
-    );
   }
 
   drawPump(): void {
     this.drawImage(
-      this.tokenImages['pumpImg'],
-      this.dx + (this.boardWidth * this.tokenImages['pumpImg'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['pumpImg'].percentY),
-      this.adjustmentRatio * this.tokenImages['pumpImg'].ratio
+      this.tokenImages['pumpImg']
     );
   }
 
   drawBiofiler(): void {
     this.drawImage(
-      this.tokenImages['biofilterImage'],
-      this.dx + (this.boardWidth * this.tokenImages['biofilterImage'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['biofilterImage'].percentY),
-      this.adjustmentRatio * this.tokenImages['biofilterImage'].ratio
+      this.tokenImages['biofilterImage']
     );
   }
 
-  drawAlevin(alevinStages: Array<boolean>): void {
-    if (alevinStages[0]) {
-      this.drawImage(
-        this.tokenImages['alevin1Img'],
-        this.dx + (this.boardWidth * this.tokenImages['alevin1Img'].percentX),
-        this.dy + (this.boardHeight * this.tokenImages['alevin1Img'].percentY),
-        this.adjustmentRatio * this.tokenImages['alevin1Img'].ratio
-      );
+  drawFishTank(): void {
+    for (let i = 1; i <= 3; i++) {
+      if (this.fishesInTank[i - 1]) {
+        this.drawImage(
+          this.tokenImages[`alevin${i}Img`]
+        );
+      }
     }
-
-    if (alevinStages[1]) {
-      this.drawImage(
-        this.tokenImages['alevin2Img'],
-        this.dx + (this.boardWidth * this.tokenImages['alevin2Img'].percentX),
-        this.dy + (this.boardHeight * this.tokenImages['alevin2Img'].percentY),
-        this.adjustmentRatio * this.tokenImages['alevin2Img'].ratio
-      );
-    }
-  }
-
-  drawFish(): void {
-    this.drawImage(
-      this.tokenImages['fishImg'],
-      this.dx + (this.boardWidth * this.tokenImages['fishImg'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['fishImg'].percentY),
-      this.adjustmentRatio * this.tokenImages['fishImg'].ratio
-    );
   }
 
   drawDisaster1(): void {
     this.drawImage(
-      this.tokenImages['disaster1Img'],
-      this.dx + (this.boardWidth * this.tokenImages['disaster1Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['disaster1Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['disaster1Img'].ratio
+      this.tokenImages['disaster1Img']
     );
   }
 
   drawDisaster2(): void {
     this.drawImage(
-      this.tokenImages['disaster2Img'],
-      this.dx + (this.boardWidth * this.tokenImages['disaster2Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['disaster2Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['disaster2Img'].ratio
+      this.tokenImages['disaster2Img']
     );
   }
 
   drawDisaster3(): void {
     this.drawImage(
-      this.tokenImages['disaster3Img'],
-      this.dx + (this.boardWidth * this.tokenImages['disaster3Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['disaster3Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['disaster3Img'].ratio
+      this.tokenImages['disaster3Img']
     );
   }
 
   drawDisaster4(): void {
     this.drawImage(
-      this.tokenImages['disaster4Img'],
-      this.dx + (this.boardWidth * this.tokenImages['disaster4Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['disaster4Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['disaster4Img'].ratio
+      this.tokenImages['disaster4Img']
     );
     this.drawImage(
-      this.tokenImages['disaster5Img'],
-      this.dx + (this.boardWidth * this.tokenImages['disaster5Img'].percentX),
-      this.dy + (this.boardHeight * this.tokenImages['disaster5Img'].percentY),
-      this.adjustmentRatio * this.tokenImages['disaster5Img'].ratio
+      this.tokenImages['disaster5Img']
     );
   }
 
-  drawMoney(clickable: boolean) {
+  drawMoney() {
     this.interactiveContext.font = `${this.boardWidth * 0.04}px source-sans-pro,sans-serif`;
+    this.interactiveContext.fillStyle = '#000'
     this.interactiveContext.fillText(
       `$ ${this.currentMoney}`,
       this.dx + (this.boardWidth * 0.91),
       this.dy + (this.boardHeight * 0.214)
     )
 
-    this.tokenImages['moneyBox'].setVisibility(clickable);
+    this.tokenImages['moneyBox'].setVisibility(this.currentStep == 1);
+    this.tokenImages['moneyBox'].setClickability(this.currentStep == 1);
     this.tokenImages['moneyBox'].x = this.dx + (this.boardWidth * this.tokenImages['moneyBox'].percentX);
     this.tokenImages['moneyBox'].y = this.dy + (this.boardHeight * this.tokenImages['moneyBox'].percentY);
     this.tokenImages['moneyBox'].width = this.boardWidth * 0.235;
     this.tokenImages['moneyBox'].height = this.boardHeight * 0.18;
-    if (clickable) {
+    if (this.tokenImages['moneyBox'].getVisibility()) {
       this.roundedRect(
         this.interactiveContext,
         this.tokenImages['moneyBox'].x,
         this.tokenImages['moneyBox'].y,
         this.tokenImages['moneyBox'].width,
         this.tokenImages['moneyBox'].height,
-        this.adjustmentRatio * this.tokenImages['moneyBox'].ratio,
-        "#ffffff99"
+        this.adjustmentRatio * this.tokenImages['moneyBox'].radius,
+        this.tokenImages['moneyBox'].fillColor
       )
     }
   }
@@ -430,29 +409,29 @@ export class BoardComponent implements AfterViewInit, OnInit {
     ctx.fill();
   }
 
-  drawImage(img: tokenImage, x: number, y: number, ratio: number): void {
+  setTokenImageSize(img: tokenImage): void {
     // Original image dimensions
-    img.width = img.image.width * ratio;
-    img.height = img.image.height * ratio;
+    img.width = img.image.width * this.adjustmentRatio * img.ratio;
+    img.height = img.image.height * this.adjustmentRatio * img.ratio;
 
-    img.x = x;
-    img.y = y;
+    img.x = this.dx + (this.boardWidth * img.percentX);
+    img.y = this.dy + (this.boardHeight * img.percentY);
+  }
+
+  drawImage(img: tokenImage): void {
+    this.setTokenImageSize(img);
 
     this.interactiveContext.drawImage(
       img.image,
-      x,
-      y,
+      img.x,
+      img.y,
       img.width,
       img.height);
-    img.setVisibility(true);
   }
 
   ereaseRect(x: number, y: number, width: number, height: number, img?: tokenImage): void {
     // Original image dimensions
     this.interactiveContext.clearRect(x - 1, y - 1, width + 1, height + 1);
-    if (img != undefined) {
-      img.setVisibility(false);
-    }
   }
 
   isInside(mouseX: number, mouseY: number, upperX: number, upperY: number, width: number, height: number) {
