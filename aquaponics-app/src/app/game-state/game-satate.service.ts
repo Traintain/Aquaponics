@@ -31,7 +31,16 @@ export class GameSatateService {
   isBiofilter$ = this.biofilter.asObservable();
 
   private pump = new BehaviorSubject<boolean>(false);
-  isPump$ = this.biofilter.asObservable();
+  isPump$ = this.pump.asObservable();
+
+  private plantedSeeds = new BehaviorSubject<Array<boolean>>([false, false, false]);
+  currentPlantedSeeds$ = this.plantedSeeds.asObservable();
+
+  private grownPlants = new BehaviorSubject<Array<boolean>>([false, false, false]);
+  currentGrownPlants$ = this.grownPlants.asObservable();
+
+  private fishesInTank = new BehaviorSubject<Array<boolean>>([false, false, false]);
+  currentFishesInTank$ = this.fishesInTank.asObservable();
 
   updateRound(newRound: number) {
     this.round.next(newRound);
@@ -55,5 +64,17 @@ export class GameSatateService {
 
   updatePump(newPump: boolean) {
     this.pump.next(newPump);
+  }
+
+  updatePlantedSeeds(newSeeds: Array<boolean>) {
+    this.plantedSeeds.next(newSeeds);
+  }
+
+  updateGrownPlants(newPlants: Array<boolean>) {
+    this.grownPlants.next(newPlants);
+  }
+
+  updateFishInTank(newFish: Array<boolean>) {
+    this.fishesInTank.next(newFish);
   }
 }
