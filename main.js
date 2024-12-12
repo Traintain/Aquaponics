@@ -721,30 +721,32 @@ function paso5() {
       document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
       document.getElementById("totalSilo").innerText = silo;
       document.getElementById("totalCampos").innerText = 0;
-      inicioPaso6();
       if (ronda === 5) {
-        Swal.fire({
-          icon: "success",
-          title: "¡Felicidades!",
-          text: "¡Ganaste!",
-          confirmButtonText: "Jugar de Nuevo",
-          allowOutsideClick: false,
-        }).then((result) => {
-          reiniciarVariables();
-        });
+          Swal.fire({
+              icon: "success",
+              title: "¡Felicidades!",
+              text: "¡Ganaste!",
+              confirmButtonText: "Jugar de Nuevo",
+              allowOutsideClick: false,
+          }).then((result) => {
+              reiniciarVariables();
+          });
       }
-    } else {
+      inicioPaso6();
+  } else {
       // La persona perdió
       Swal.fire({
-        icon: "warning",
-        title: "¡¡Oh no!!!",
-        text: "No cuentas con suficiete comida",
-        confirmButtonText: "Jugar de Nuevo",
-        allowOutsideClick: false,
+          icon: "warning",
+          title: "¡¡Oh no!!!",
+          text: "No cuentas con suficiente comida",
+          confirmButtonText: "Jugar de Nuevo",
+          allowOutsideClick: false,
       }).then(() => {
-        reiniciarVariables();
+          reiniciarVariables();
       });
-    }
+  }
+  
+  
   } else {
     if (produccion >= 100) {
       let txt = "<p>You successfully fed 100 people, congratulations!</p>";
@@ -759,7 +761,6 @@ function paso5() {
       document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
       document.getElementById("totalSilo").innerText = silo;
       document.getElementById("totalCampos").innerText = 0;
-      inicioPaso6();
       if (ronda === 5) {
         Swal.fire({
           icon: "success",
@@ -771,6 +772,7 @@ function paso5() {
           reiniciarVariables();
         });
       }
+      inicioPaso6();
     } else {
       // La persona perdió
       Swal.fire({
