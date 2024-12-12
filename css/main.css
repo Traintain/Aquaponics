@@ -80,6 +80,28 @@
     font-size: 300%;
     margin-bottom: 0 !important;
     text-align: center;
+    background-color: #c0bc2c;
+}
+
+#btn-es{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 300%;
+    margin-bottom: 0 !important;
+    text-align: center;
+    background-color: #f5f5dc;
+}
+
+#btn-en{
+    font-family: source-sans-pro,sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 300%;
+    margin-bottom: 0 !important;
+    text-align: center;
+    background-color: #40747c;
+    color: #f5f5dc;
 }
 
 #btn-silo{
