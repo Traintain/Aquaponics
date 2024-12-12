@@ -21,6 +21,8 @@ let vidaPiscicultura = 2;
 let recogioCampos = false;
 let recogioSilo = false;
 
+let currentLanguage = "";
+
 const idCama = {
   1: ["btnCama1", false],
   2: ["btnCama2", false],
@@ -40,6 +42,23 @@ const infoRonda = {
   4: [2, "una plaga", 40],
   5: [1, "una sequía", 0],
 };
+
+const infoRonda_en = {
+  1: [3, "a hurricane", 20],
+  2: [4, "an earthquake", 20],
+  3: [3, "a flood", 20],
+  4: [2, "a plague", 40],
+  5: [1, "a drought", 0],
+};
+
+//Config leng
+
+function setLanguage(language){
+  currentLanguage = language
+  console.log(language)
+  const btnInicio = document.getElementById('btn-inicio');
+  if (btnInicio) btnInicio.disabled = false;
+}
 
 /**
  * COMPORTAMIENTO
@@ -64,22 +83,34 @@ function verElemento(id, visible) {
 function inicio() {
   document.getElementById("inicio").hidden = true;
   document.getElementById("tablero").hidden = false;
-
-  Swal.fire({
-    title: "¡Bienvenido!",
-    text: "Bienvenido a Aquaponics. Tu objetivo es alimentar a 100 personas cada ronda. Para lograrlo debes usar la comida que producen tus campos y la comida de tu sistema de acuaponía, que mezcla peces y plantas",
-    confirmButtonText: "Iniciar la primera ronda",
-    allowOutsideClick: false,
-  }).then(() => {
-    inicioPaso1();
-  });
+  if(currentLanguage === 'es'){
+    Swal.fire({
+      title: "¡Bienvenido!",
+      text: "Bienvenido a Aquaponics. Tu objetivo es alimentar a 100 personas cada ronda. Para lograrlo debes usar la comida que producen tus campos y la comida de tu sistema de acuaponía, que mezcla peces y plantas",
+      confirmButtonText: "Iniciar la primera ronda",
+      allowOutsideClick: false,
+    }).then(() => {
+      inicioPaso1();
+    });
+  }else{
+    Swal.fire({
+      title: "Welcome!",
+      text: "Welcome to Aquaponics. Your goal is to feed 100 people each round. To achieve this, you must use the food produced by your fields and the food from your aquaponic system, which combines fish and plants.",
+      confirmButtonText: "Start the first round",
+      allowOutsideClick: false,
+    }).then(() => {
+      inicioPaso1();
+    });
+  }
+  
 }
 
 /**
  * Muestra instrucciones de qué pasará esta ronda e indica que recogan el dinero
  */
 function inicioPaso1() {
-  document.getElementById("silo").innerText = silo;
+  if(currentLanguage === 'es'){
+    document.getElementById("silo").innerText = silo;
   document.getElementById("titulo-ronda").innerText = "Ronda " + ronda;
   let txt = "";
   txt +=
@@ -112,6 +143,40 @@ function inicioPaso1() {
   document.getElementById("proxima-ronda").innerText = proximaRonda;
   verElemento("btn-dinero", true);
   verElemento("btn-continuar", false);
+  }else{
+    document.getElementById("silo").innerText = silo;
+  document.getElementById("titulo-ronda").innerText = "Round " + ronda;
+  let txt = "";
+  txt +=
+    "<p>In this round, you will receive $" +
+    infoRonda[ronda][0] +
+    "</p><p>Furthermore, " +
+    infoRonda_en[ronda][1] +
+    " will happen in this round. After it passes, the fields ";
+  txt +=
+    campos > 40
+      ? " will only be able to feed " +
+        (campos - infoRonda[ronda][2]) +
+        " people</p>"
+      : " will not produce food.</p>";
+  txt += "<p>Click on the coins to continue.</p>";
+  document.getElementById("descripcion-paso").innerHTML = txt;
+
+  let proximaRonda = "";
+  if (ronda < 5) {
+    proximaRonda =
+      infoRonda_en[ronda + 1][1] +
+      " is comming (-" +
+      infoRonda[ronda + 1][2] +
+      " fields), +$" +
+      infoRonda[ronda + 1][0];
+  } else {
+    proximaRonda = "This is the final round.";
+  }
+  document.getElementById("proxima-ronda").innerText = proximaRonda;
+  verElemento("btn-dinero", true);
+  verElemento("btn-continuar", false);
+  }  
 }
 
 /**
@@ -129,7 +194,8 @@ function paso1() {
  * Habilita los botones para comprar el filtro, la bomba, las plántulas y los alevines y muestra una descripción
  */
 function inicioPaso2() {
-  let txt = "";
+  if (currentLanguage === 'es'){
+    let txt = "";
   if (vidaHidroponia > 0 && vidaPiscicultura > 0) {
     txt += "<p>Puedes comprar plantulas y alevines:</p>";
     vidaHidroponia > 0
@@ -189,6 +255,68 @@ function inicioPaso2() {
   verElemento("btn-continuar", true);
   document.getElementById("btn-continuar").innerText = "Continuar";
   document.getElementById("btn-continuar").setAttribute("onClick", "paso2()");
+  } else {
+  let txt = "";
+  if (vidaHidroponia > 0 && vidaPiscicultura > 0) {
+    txt += "<p>You can buy seedlings and fry:</p>";
+    vidaHidroponia > 0
+      ? (txt +=
+          "<p>Seedlings will feed " +
+          (bomba ? 15 : 10) +
+          " people will be ready this round.</p>")
+      : (txt +=
+          "<p>Your hydroponic system is damaged and you can't use it.</p>");
+    vidaPiscicultura > 0
+      ? (txt +=
+          "<p>The fry will feed " +
+          (bomba ? 70 : 50) +
+          " and they can be fished in the next round.</p>")
+      : (txt +=
+          "<p>Your fish farming tank is damaged and you can't use it.</p>");
+  }
+
+  if (biofiltro === false || bomba === false) {
+    txt += "<p>You can also buy upgrades for your system:</p>";
+    if (bomba === false) {
+      verElemento("btn-bomba", true);
+      txt +=
+        "<p>The pump increases your production. The seedlings from the hydroponic system will feed 15 people, and the fish will feed 70 people.</p>";
+    }
+
+    if (biofiltro === false) {
+      verElemento("btn-biofiltro", true);
+      txt +=
+        "<p>The biofilter prevents the aquaponic system from deteriorating. If it reaches the end of its lifespan, you won't be able to use it anymore.</p>";
+      txt +=
+        "<p>The hydroponic system has " +
+        vidaHidroponia +
+        " uses left, and the fish farming system has " +
+        vidaPiscicultura +
+        " uses</p>";
+    }
+  }
+
+  if (vidaHidroponia > 0) {
+    verElemento("btnCama1", true);
+    verElemento("btnCama2", true);
+    verElemento("btnCama3", true);
+    verElemento("error-vida-hidroponia", false);
+  } else {
+    verElemento("error-vida-hidroponia", true);
+  }
+
+  if (vidaPiscicultura > 0) {
+    verElemento("btnComprarAlevines", true);
+    verElemento("error-vida-piscicultura", false);
+  } else {
+    verElemento("error-vida-piscicultura", true);
+  }
+  document.getElementById("descripcion-paso").innerHTML = txt;
+
+  verElemento("btn-continuar", true);
+  document.getElementById("btn-continuar").innerText = "Continue";
+  document.getElementById("btn-continuar").setAttribute("onClick", "paso2()");
+  }
 }
 
 /**
@@ -289,6 +417,7 @@ function desacivarCamasSinComprar() {
  * Muestra información cuando sucede el desastre y pone una imagen sobre el campo destruido
  */
 function inicioPaso3() {
+  if(currentLanguage === 'es'){
   campos -= infoRonda[ronda][2];
   let txt = "<img src='./img/Terreno - " + ronda + ".png'/>";
   txt += "<p>Sucedió " + infoRonda[ronda][1];
@@ -310,13 +439,38 @@ function inicioPaso3() {
   document
     .getElementById("btn-continuar")
     .setAttribute("onClick", "inicioPaso4()");
+  } else {
+  campos -= infoRonda[ronda][2];
+  let txt = "<img src='./img/Terreno - " + ronda + ".png'/>";
+  txt +=  infoRonda_en[ronda][1] + " has occured";
+  campos > 0
+    ? (txt += ", you loose " + infoRonda[ronda][2] + " fields")
+    : (txt += "The fields will not produce food this round.");
+
+  txt += "<p>To proceed, press 'Continue'.</p>";
+
+  document.getElementById("descripcion-paso").innerHTML = txt;
+
+  if (ronda !== 5) {
+    verElemento("img-desastre-" + ronda, true);
+  }
+
+  if (ronda === 4) {
+    verElemento("img-desastre-5", true);
+  }
+  document
+    .getElementById("btn-continuar")
+    .setAttribute("onClick", "inicioPaso4()");
+  }
+  
 }
 
 /**
  * Revisa si hay camas de cultivo, peces, terrenos o recursos en el silo por recoger
  */
 function hayRecursosPorRecoger() {
-  let txt = "<p>Para continuar debes recoger los recursos<p>";
+  if (currentLanguage === 'es'){
+    let txt = "<p>Para continuar debes recoger los recursos<p>";
   hayRecursosPendientes = false;
   if (idPiscicola[3][1] === true) {
     hayRecursosPendientes = true;
@@ -351,6 +505,42 @@ function hayRecursosPorRecoger() {
       "<p>Ya se recogieron los recursos. Para avanzar haz click en 'alimentar'";
   }
   document.getElementById("descripcion-paso").innerHTML = txt;
+  } else {
+    let txt = "<p>To continue, you must collect the resources.<p>";
+  hayRecursosPendientes = false;
+  if (idPiscicola[3][1] === true) {
+    hayRecursosPendientes = true;
+    txt += "<p>To fish the fish, click on the fish.</p>";
+  }
+  if (campos !== 0 && !recogioCampos) {
+    hayRecursosPendientes = true;
+    txt +=
+      "<p>To collect what your fields produce, click on the 'Land' box.</p>";
+  }
+  if (!recogioSilo) {
+    hayRecursosPendientes = true;
+    txt +=
+      "<p>To collect what you have in the silo, click on the 'Silo' box.</p>";
+  }
+  flag = true;
+  for (let i = 1; i <= 3; i++) {
+    if (idCama[i][1] === true) {
+      hayRecursosPendientes = true;
+      if (flag) {
+        txt +=
+          "<p>To collect the plants from the hydroponic system, click on the image of the plants.</p>";
+        flag = false;
+      }
+    }
+  }
+  if (hayRecursosPendientes) {
+    verElemento("btn-continuar", false);
+  } else {
+    verElemento("btn-continuar", true);
+    txt =
+      "<p>The resources have been collected. To proceed, click on 'Feed'.";
+  }
+  document.getElementById("descripcion-paso").innerHTML = txt;
 }
 
 /**
@@ -358,9 +548,29 @@ function hayRecursosPorRecoger() {
  */
 function inicioPaso4() {
   document.getElementById("btn-continuar").setAttribute("onClick", "paso5()");
-  document.getElementById("btn-continuar").innerText = "Alimentar personas";
+  document.getElementById("btn-continuar").innerText = "Feed";
   avanzarRecursos();
   calcularDeterioro();
+  }
+  
+}
+
+/**
+ * Avanza los recursos y luego calcula el deterioro de los sitemas
+ */
+function inicioPaso4() {
+  if(currentLanguage === 'es'){
+    document.getElementById("btn-continuar").setAttribute("onClick", "paso5()");
+    document.getElementById("btn-continuar").innerText = "Alimentar personas";
+    avanzarRecursos();
+    calcularDeterioro();
+  } else {
+    document.getElementById("btn-continuar").setAttribute("onClick", "paso5()");
+    document.getElementById("btn-continuar").innerText = "Feed people";
+    avanzarRecursos();
+    calcularDeterioro();
+  }
+
 }
 
 /**
@@ -497,42 +707,82 @@ function recogerSilo() {
  * Si no se cuenta con una produccion suficiente (>= 100) notifica al usuario que ha perdido
  */
 function paso5() {
-  if (produccion >= 100) {
-    let txt = "<p>Lograste alimentar a las 100 personas, ¡felicidades!</p>";
-    document.getElementById("descripcion-paso").innerHTML = txt;
-    // La persona puede avanzar a la siguiente ronda
-    produccion -= 100;
-    comidaAcuaponia = 0;
-    comidaPiscicultura = 0;
-    silo = 0;
-    document.getElementById("totalPuntos").innerText = produccion;
-    document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
-    document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
-    document.getElementById("totalSilo").innerText = silo;
-    document.getElementById("totalCampos").innerText = 0;
-    inicioPaso6();
-    if (ronda === 5) {
+  if (currentLanguage === 'es'){
+    if (produccion >= 100) {
+      let txt = "<p>Lograste alimentar a las 100 personas, ¡felicidades!</p>";
+      document.getElementById("descripcion-paso").innerHTML = txt;
+      // La persona puede avanzar a la siguiente ronda
+      produccion -= 100;
+      comidaAcuaponia = 0;
+      comidaPiscicultura = 0;
+      silo = 0;
+      document.getElementById("totalPuntos").innerText = produccion;
+      document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
+      document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
+      document.getElementById("totalSilo").innerText = silo;
+      document.getElementById("totalCampos").innerText = 0;
+      inicioPaso6();
+      if (ronda === 5) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Felicidades!",
+          text: "¡Ganaste!",
+          confirmButtonText: "Jugar de Nuevo",
+          allowOutsideClick: false,
+        }).then((result) => {
+          reiniciarVariables();
+        });
+      }
+    } else {
+      // La persona perdió
       Swal.fire({
-        icon: "success",
-        title: "¡Felicidades!",
-        text: "¡Ganaste!",
+        icon: "warning",
+        title: "¡¡Oh no!!!",
+        text: "No cuentas con suficiete comida",
         confirmButtonText: "Jugar de Nuevo",
         allowOutsideClick: false,
-      }).then((result) => {
+      }).then(() => {
         reiniciarVariables();
       });
     }
   } else {
-    // La persona perdió
-    Swal.fire({
-      icon: "warning",
-      title: "¡¡Oh no!!!",
-      text: "No cuentas con suficiete comida",
-      confirmButtonText: "Jugar de Nuevo",
-      allowOutsideClick: false,
-    }).then(() => {
-      reiniciarVariables();
-    });
+    if (produccion >= 100) {
+      let txt = "<p>You successfully fed 100 people, congratulations!</p>";
+      document.getElementById("descripcion-paso").innerHTML = txt;
+      // La persona puede avanzar a la siguiente ronda
+      produccion -= 100;
+      comidaAcuaponia = 0;
+      comidaPiscicultura = 0;
+      silo = 0;
+      document.getElementById("totalPuntos").innerText = produccion;
+      document.getElementById("totalPiscicola").innerText = comidaPiscicultura;
+      document.getElementById("totalHidroponia").innerText = comidaAcuaponia;
+      document.getElementById("totalSilo").innerText = silo;
+      document.getElementById("totalCampos").innerText = 0;
+      inicioPaso6();
+      if (ronda === 5) {
+        Swal.fire({
+          icon: "success",
+          title: "congratulations!",
+          text: "You won!",
+          confirmButtonText: "Play again",
+          allowOutsideClick: false,
+        }).then((result) => {
+          reiniciarVariables();
+        });
+      }
+    } else {
+      // La persona perdió
+      Swal.fire({
+        icon: "warning",
+        title: "Oh no!!!",
+        text: "You don't have enough food.",
+        confirmButtonText: "Play again",
+        allowOutsideClick: false,
+      }).then(() => {
+        reiniciarVariables();
+      });
+    }
   }
 }
 
@@ -540,36 +790,68 @@ function paso5() {
  * Habilita el botón para almacenar en el silo luego de alimentar. Si no hay excedente continúa
  */
 function inicioPaso6() {
-  if (produccion === 0) {
-    paso7();
-  } else {
-    let txt =
-      "<p>Como produjiste excedentes hay que guardarlos en el silo. Haz click en la caja 'silo'</p>";
-    document.getElementById("descripcion-paso").innerHTML = txt;
-    silo = produccion;
-    produccion = 0;
-    document.getElementById("btn-silo").setAttribute("onClick", "paso7()");
-    verElemento("btn-silo", true);
-    verElemento("btn-continuar", false);
+  if (currentLanguage === 'es'){
+    if (produccion === 0) {
+      paso7();
+    } else {
+      let txt =
+        "<p>Como produjiste excedentes hay que guardarlos en el silo. Haz click en la caja 'silo'</p>";
+      document.getElementById("descripcion-paso").innerHTML = txt;
+      silo = produccion;
+      produccion = 0;
+      document.getElementById("btn-silo").setAttribute("onClick", "paso7()");
+      verElemento("btn-silo", true);
+      verElemento("btn-continuar", false);
+    }
+  } else{
+    if (produccion === 0) {
+      paso7();
+    } else {
+      let txt =
+        "<p>Since you produced surplus, it needs to be stored in the silo. Click on the 'Silo' box.</p>";
+      document.getElementById("descripcion-paso").innerHTML = txt;
+      silo = produccion;
+      produccion = 0;
+      document.getElementById("btn-silo").setAttribute("onClick", "paso7()");
+      verElemento("btn-silo", true);
+      verElemento("btn-continuar", false);
+    }
   }
+  
 }
 
 /**
  * Se almacena el excedente en el silo y se inicia la siguiente ronda
  */
 function paso7() {
-  document.getElementById("totalPuntos").innerText = produccion;
-  document.getElementById("silo").innerText = silo;
-  verElemento("btn-silo", false);
-  let txt = "<p>Para avanzar a la siguiente ronda haz click en 'continuar'</p>";
-  document.getElementById("descripcion-paso").innerHTML = txt;
-  document
-    .getElementById("btn-continuar")
-    .setAttribute("onClick", "inicioPaso1()");
-  document.getElementById("btn-continuar").innerText = "Continuar";
-  verElemento("btn-continuar", true);
+  if (currentLanguage === 'es'){
+    document.getElementById("totalPuntos").innerText = produccion;
+    document.getElementById("silo").innerText = silo;
+    verElemento("btn-silo", false);
+    let txt = "<p>Para avanzar a la siguiente ronda haz click en 'continuar'</p>";
+    document.getElementById("descripcion-paso").innerHTML = txt;
+    document
+      .getElementById("btn-continuar")
+      .setAttribute("onClick", "inicioPaso1()");
+    document.getElementById("btn-continuar").innerText = "Continuar";
+    verElemento("btn-continuar", true);
 
   ronda += 1;
+  } else {
+    document.getElementById("totalPuntos").innerText = produccion;
+    document.getElementById("silo").innerText = silo;
+    verElemento("btn-silo", false);
+    let txt = "<p>To advance to the next round, click on 'Continue'.</p>";
+    document.getElementById("descripcion-paso").innerHTML = txt;
+    document
+      .getElementById("btn-continuar")
+      .setAttribute("onClick", "inicioPaso1()");
+    document.getElementById("btn-continuar").innerText = "Continue";
+    verElemento("btn-continuar", true);
+
+    ronda += 1;
+  }
+  
 }
 
 /**
